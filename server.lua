@@ -27,14 +27,12 @@ local result = MySQL.Sync.fetchScalar("SELECT time FROM questline WHERE identifi
 local currentLocalTime = (("%02d:%02d:%02d"):format(date.hour, date.min, date.sec))
 if result < currentLocalTime then
 data = false
-print('false, inte cd')
 -- för att randomera questet,
 fsc_randomquest(_source)
 -- sätter 3h cd.
 fsc_sattcd(_source)
 else
 data = true
-print('true, har cd')
 TriggerClientEvent('esx:showNotification', _source,'Hej tack för hjälpen förut, just nu är allt fin fint. ha det gött hej.')
 TriggerClientEvent('fsc_questline:avbrytkamera',_source)
 return
@@ -55,12 +53,14 @@ end
 function fsc_randomquest(source)
 local _source = source
 quest = {}
-quest[1] = 1
-quest[2] = 1
+quest[1] = 2
+quest[2] = 2
 local q = math.random(quest[1], quest[2])
 print(q)
 if q == 1 then
 fsc_letakatt(_source)
+elseif q == 2 then
+fsc_letaring(_source)
 else
 end
 end
@@ -91,24 +91,92 @@ local randomMoney = math.random(600,800)
 	TriggerClientEvent('fsc_questline:avbrytkamera',src)
 end)
 
-
-RegisterServerEvent('questline_makki3:klarring')
-AddEventHandler('questline_makki3:klarring', function()
+-- Reward till kattquestet. NYA UPDATEN ONDA SIDAN
+RegisterServerEvent('fsc_questline:klarkatto')
+AddEventHandler('fsc_questline:klarkatto', function()
 local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-local randomMoney = math.random(500,700)
+local randomMoney = math.random(400,1000)
+    xPlayer.addMoney(randomMoney)
+	TriggerClientEvent('esx:showNotification', src, 'O jävlar en katt. tack så mycket, här får du lite kompesation för den. säg inte till någon.')
+	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
+	TriggerClientEvent('fsc_questline:avbrytkamera', src)
+end)
+
+-- LETA RINGEN!
+function fsc_letaring(source)
+local _source = source
+local xPlayer = ESX.GetPlayerFromId(_source)
+TriggerClientEvent('esx:showNotification', _source,'Hej, Igår när jag var på toa, så slank min vigsel ring ner i toaletten skulle du kunna leta rätt på den så lovar jag att jag gör vad som helst.')
+local avloppos = nil
+local avloppcords = nil
+
+avloppos = vector3(125.64, -1089.39, 28.18)
+avloppcords = vector3(620.05, -1380.37, 10.18)
+
+local skattjakt = math.random(1,4) -- slump på hur många gånger du behöver leta.
+local hittaavlopp = math.random(1,4)
+
+local skattjaktkoll = 0 -- Client räknar hur många gånger du letat.
+    local slamsugen1 = false -- CLIENT
+	local slamsugen2 = false -- CLIENT
+	local slamsugen3 = false -- CLIENT
+	local slamsugen4 = false -- CLIENT
+	
+	local avloppletare1 = { x = 621.44, y = -1380.95, z = 9.21, h = 180.4409942627 }
+	local avloppletare2 = { x = 632.04, y = -1411.97, z = 9.21, h = 180.4409942627 }
+	local avloppletare3 = { x = 643.58, y = -1452.16, z = 9.21, h = 180.4409942627 }
+	local avloppletare4 = { x = 652.97, y = -1491.66, z = 9.21, h = 180.4409942627 }
+
+TriggerClientEvent('fsc_questline:ringpos',_source, avloppos, avloppcords, skattjakt, avloppletare1, avloppletare2, avloppletare3, avloppletare4 )
+end
+
+
+
+
+-- Nya updaten
+RegisterServerEvent('fsc_questline:klarring')
+AddEventHandler('fsc_questline:klarring', function()
+local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+local randomMoney = math.random(600,800)
     xPlayer.addMoney(randomMoney)
 	TriggerClientEvent('esx:showNotification', src, 'Tack så himla mycket, nu kan jag träffa min pojkvän igen.')
 	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
+	TriggerClientEvent('fsc_questline:avbrytkamera', src)
 end)
 
+
+--gamla
 RegisterServerEvent('questline_makki3:hittavigselring')
 AddEventHandler('questline_makki3:hittavigselring', function()
 local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	TriggerClientEvent('esx:showNotification', _source,'Hej, Igår när jag var på toa, så slank min vigsel ring ner i toaletten skulle du kunna leta rätt på den så lovar jag att jag gör vad som helst.')
+local xPlayer = ESX.GetPlayerFromId(_source)
+TriggerClientEvent('esx:showNotification', _source,'Hej, Igår när jag var på toa, så slank min vigsel ring ner i toaletten skulle du kunna leta rätt på den så lovar jag att jag gör vad som helst.')
+
+local skattjakt = math.random(1,4)
+		local skattjaktkoll = 0
+        local slamsugen1 = false
+		local slamsugen2 = false
+		local slamsugen3 = false
+		local slamsugen4 = false
+		 
+		local avloppletare1 = { x = 621.44, y = -1380.95, z = 9.21, h = 180.4409942627 }
+		local avloppletare2 = { x = 632.04, y = -1411.97, z = 9.21, h = 180.4409942627 }
+		local avloppletare3 = { x = 643.58, y = -1452.16, z = 9.21, h = 180.4409942627 }
+		local avloppletare4 = { x = 652.97, y = -1491.66, z = 9.21, h = 180.4409942627 }
+		
+		local hittaavlopp = math.random(1,4)
+		
+		 local distance1 = #(vector3(avloppletare1.x, avloppletare1.y, avloppletare1.z) - plyCoords)
+		local distance2 = #(vector3(avloppletare2.x, avloppletare2.y, avloppletare2.z) - plyCoords)
+		local distance3 = #(vector3(avloppletare3.x, avloppletare3.y, avloppletare3.z) - plyCoords)
+		local distance4 = #(vector3(avloppletare4.x, avloppletare4.y, avloppletare4.z) - plyCoords)
+		
 end)
 
+
+--gamla
 RegisterServerEvent('questline_makki3:fyllabilfirmakaffe')
 AddEventHandler('questline_makki3:fyllabilfirmakaffe', function()
 local _source = source
