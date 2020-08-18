@@ -21,9 +21,13 @@ end)
 Citizen.CreateThread(function()
 while not NetworkIsSessionStarted() do Wait(0) end
 	-- Skapar Quest peden.
+	
+	
     ped2 = createPed(1146800212, vector3(242.61, -890.07, 30.49 -1), 32.17)
-	local me = PlayerPedId()
+	Wait(1000)
+	
 	while true do
+	local me = PlayerPedId()
         local sleep = 200
         local distance = GetDistanceBetweenCoords(GetEntityCoords(me), GetEntityCoords(ped2))
         if distance > 2.5 then
@@ -60,14 +64,13 @@ while not NetworkIsSessionStarted() do Wait(0) end
 			end
 end)
 
-
 -- Quest Giver NYA UPDATEN Yngve
 Citizen.CreateThread(function()
 while not NetworkIsSessionStarted() do Wait(0) end
 	-- Skapar Quest peden.
     ped3 = createPed(-2054645053, vector3(125.7, -1036.17, 29.28 -1), 70.56)
-	local me = PlayerPedId()
 	while true do
+	local me = PlayerPedId()
         local sleep = 200
         local distance = GetDistanceBetweenCoords(GetEntityCoords(me), GetEntityCoords(ped3))
         if distance > 3.0 then
@@ -97,7 +100,7 @@ while not NetworkIsSessionStarted() do Wait(0) end
 			Wait(5)
 			end
 end)
-
+--]]
 -- lägger in ringarna och allt det nya versionen.
 RegisterNetEvent('fsc_questline:ringpos')
 AddEventHandler('fsc_questline:ringpos', function(avloppos, avloppcords, skattjakt,avloppletare1, avloppletare2,avloppletare3, avloppletare4)

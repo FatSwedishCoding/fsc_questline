@@ -64,6 +64,14 @@ fsc_letaring(_source)
 else
 end
 end
+
+-- updrag 3, köra lastbil med kaffe till olika affärer
+function fsc_korakaffe(source)
+local _source = source
+TriggerClientEvent('esx:showNotification', _source,'Det r')
+
+end
+
 -- Första konv om sin katt. NYA UPDATEN
 function fsc_letakatt(source)
 local _source = source
