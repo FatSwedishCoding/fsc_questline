@@ -377,6 +377,6 @@ createPed = function(hash, coords, heading)
 end
 
 -- MADE BY MAKKIE & Abbezon AKA KYLVASKAN!
--- VERSION 1.2
+-- VERSION 1.2.1
 -- 2019-03-29 PROJECT DATE
 -- 2020-08-16 LAST UPDATE
