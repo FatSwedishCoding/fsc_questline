@@ -6,7 +6,10 @@ local stuff = {
     inMission = false,
 	hittatkatt = false,
 	inlamnadkatt = false,
-	hittatring = false
+	hittatring = false,
+	hittayngve = false,
+	lamnatvara = false,
+	vehicle = false
 	}
 
 Citizen.CreateThread(function()
@@ -57,6 +60,15 @@ while not NetworkIsSessionStarted() do Wait(0) end
 	        stuff.hittatring = false			
 			return
 			end
+			if stuff.lamnatvara then
+			TriggerServerEvent('fsc_questline:klarrest')
+			stuff.inMission = false
+			stuff.hittayngve = true
+	        stuff.lamnatvara = false
+	        vehicle = false
+			return
+			end
+			
 			TriggerServerEvent('fsc_questline:linkustart')			
 			end
 			Wait(5)
@@ -95,6 +107,31 @@ while not NetworkIsSessionStarted() do Wait(0) end
 	        stuff.hittatkatt = false
 	        stuff.inlamnadkatt = false
 			end
+			if stuff.hittayngve then
+			TriggerEvent('fsc_questline:avbrytkamera')
+			stuff.hittayngve = false
+			RemoveBlip(pedBlip)
+			TriggerServerEvent('fsc_questline:koravaror')
+			
+			local vehicleModel1
+	        local vehiclename1
+	vehicleModel1 = GetHashKey(Config.Vehicle.name)
+	vehiclename1 = Config.Vehicle.label
+	
+    local vehicleModel = vehicleModel1
+	local vehiclename = vehiclename1
+	
+    RequestModel(vehicleModel)
+    while not HasModelLoaded(vehicleModel) do Wait(0) end
+	local tpos = #Config.Vehicle.spawnlocations
+    stuff.vehicle = CreateVehicle(vehicleModel, Config.Vehicle.spawnlocations[tpos].coords, Config.Vehicle.spawnlocations[tpos].heading, true, true)
+    NetworkRegisterEntityAsNetworked(stuff.vehicle)
+    SetVehicleNumberPlateText(stuff.vehicle, 'Resturang')
+	Wait(4000)
+	TaskWarpPedIntoVehicle(GetPlayerPed(-1), stuff.vehicle, -1)
+			hemta()
+			TriggerEvent('fsc_questline:avbrytkamera')
+			end		
 			TriggerEvent('fsc_questline:avbrytkamera')
 			end
 			Wait(5)
@@ -102,7 +139,110 @@ while not NetworkIsSessionStarted() do Wait(0) end
 			Wait(5)
 			end
 end)
---]]
+
+function hemta()
+hemta1cords = vector3(-658.55, -892.09, 24.91)
+hemta2cords = vector3(1233.24, -3230.07, 5.65)
+hemta3cords = vector3(134.94, -1052.28, 29.41)
+RemoveBlip(pedBlip)
+local pedBlip = AddBlipForCoord(hemta1cords) -- till client
+	SetBlipColour(pedBlip, 1) -- till client
+	BeginTextCommandSetBlipName("STRING") -- till client
+	AddTextComponentString('Chuckling') -- till client
+EndTextCommandSetBlipName(pedBlip)
+
+local quest1 = false -- CLIENT
+local quest2 = true -- CLIENT
+local quest3 = true -- CLIENT
+
+
+while true do  -- till client
+Citizen.Wait(1) -- till client
+    local plyCoords = GetEntityCoords(PlayerPedId(), 0) -- till client
+
+    local distance1 = #(vector3(hemta1cords.x, hemta1cords.y, hemta1cords.z) - plyCoords) -- till client
+	local distance2 = #(vector3(hemta2cords.x, hemta2cords.y, hemta2cords.z) - plyCoords)-- till client
+	local distance3 = #(vector3(hemta3cords.x, hemta3cords.y, hemta3cords.z) - plyCoords)-- till client
+
+    --POS1
+        if distance1 < 10 then
+		if not quest1 then
+		--quest2 = false
+			DrawText3D(hemta1cords.x,hemta1cords.y,hemta1cords.z, '[E] för prata med kassören')
+                        if distance1 < 2 then 
+						if IsControlJustReleased(0, 54) then
+						quest2 = false						
+						quest1 = true
+						FreezeEntityPosition(stuff.vehicle, true)
+						TriggerEvent('esx:showNotification', 'Freda Foh Shen: Vad vill du beställa?')
+						Wait(2000)
+						TriggerEvent('esx:showNotification', 'You: Jag har en beställning från Yngve')
+						Wait(2000)
+						TriggerEvent('esx:showNotification', 'Freda Foh Shen: Ok , vi lastar in kycklingen nu')
+						Wait(2000)
+						TriggerEvent('esx:showNotification', 'Freda Foh Shen: And then! and then! and then!')
+						FreezeEntityPosition(stuff.vehicle, false)
+						
+						RemoveBlip(pedBlip)
+						pedBlip1 = AddBlipForCoord(hemta2cords) -- till client
+	SetBlipColour(pedBlip1, 1) -- till client
+	BeginTextCommandSetBlipName("STRING") -- till client
+	AddTextComponentString('Kyckling Pickup') -- till client
+EndTextCommandSetBlipName(pedBlip1) -- till client
+						end
+						end
+			end
+			end
+			
+			if distance2 < 10 then
+		if not quest2 then
+            DrawMarker(0, hemta2cords.x, hemta2cords.y, hemta2cords.z, 0, 0, 0, 0, 0, 0, 0.5, 0.5, 1.0, 1, 157, 0, 155, false, false, 2, false, false, false, false)
+			DrawText3D(hemta2cords.x,hemta2cords.y,hemta2cords.z, '[E] för att prata med Sebastian Bäck')
+                        if distance2 < 2 then
+						if IsControlJustReleased(0, 54) then
+						quest2 = true
+						quest3 = false
+						FreezeEntityPosition(stuff.vehicle, true)
+						TriggerEvent('esx:showNotification', 'Sebastian Bäck: Hej vad gör du här på varvet?')
+						Wait(2000)
+						TriggerEvent('esx:showNotification', 'You: Jag har en beställning från Yngve')
+						Wait(2000)
+						TriggerEvent('esx:showNotification', 'Sebastian Bäck: Ok , vi lasta fisken i skufferten nu.')
+						Wait(2000)
+						TriggerEvent('esx:showNotification', 'Sebastian Bäck: Sådär klart åk tbx till resturangen! vi fiskare vill inte ha statsbor här!')
+						FreezeEntityPosition(stuff.vehicle, false)
+						RemoveBlip(pedBlip1)
+						pedBlip1 = AddBlipForCoord(hemta3cords) -- till client
+	SetBlipColour(pedBlip1, 1) -- till client
+	BeginTextCommandSetBlipName("STRING") -- till client
+	AddTextComponentString('Resturangen') -- till client
+EndTextCommandSetBlipName(pedBlip1) -- till client
+						end
+						end
+			end
+			end
+			if distance3 < 10 then
+			if not quest3 then
+			 DrawMarker(0, hemta3cords.x, hemta3cords.y, hemta3cords.z, 0, 0, 0, 0, 0, 0, 0.5, 0.5, 1.0, 1, 157, 0, 155, false, false, 2, false, false, false, false)
+			DrawText3D(hemta3cords.x,hemta3cords.y,hemta3cords.z, '[E] för att lasta av allt')
+			 if distance3 < 2 then
+			 if IsControlJustReleased(0, 54) then
+						quest3 = true
+						FreezeEntityPosition(stuff.vehicle, true)
+						TriggerEvent('esx:showNotification', 'Yngve Tugmotstånd: Lastar av allt nu')
+						Wait(2000)
+						TriggerEvent('esx:showNotification', 'Yngve Tugmotstånd: dra till vanja så kommer hon betala dig')
+						Wait(2000)
+						RemoveBlip(pedBlip1)
+						DeleteEntity(stuff.vehicle)
+						stuff.lamnatvara = true
+						end
+			end
+			end
+end
+end
+end
+
 -- lägger in ringarna och allt det nya versionen.
 RegisterNetEvent('fsc_questline:ringpos')
 AddEventHandler('fsc_questline:ringpos', function(avloppos, avloppcords, skattjakt,avloppletare1, avloppletare2,avloppletare3, avloppletare4)
@@ -254,6 +394,20 @@ if distance3 < 10 then
 end
 end)
 
+-- lägger in quest3 körning pos nya version!
+RegisterNetEvent('fsc_questline:yngvepos')
+AddEventHandler('fsc_questline:yngvepos', function(restpos)
+stuff.inMission = true
+stuff.hittayngve = true
+TriggerEvent('fsc_questline:avbrytkamera')
+
+local pedBlip = AddBlipForCoord(restpos)
+	SetBlipColour(pedBlip, 1)
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentString('Yngves Jobb')
+EndTextCommandSetBlipName(pedBlip)
+TriggerEvent('esx:showNotification', 'blockad 1')
+end)
 
 --lägger in katten och allt det. nya versionen!
 RegisterNetEvent('fsc_questline:kattpos')
@@ -382,6 +536,6 @@ createPed = function(hash, coords, heading)
 end
 
 -- MADE BY MAKKIE & Abbezon AKA KYLVASKAN!
--- VERSION 1.2.2
+-- VERSION 1.3
 -- 2019-03-29 PROJECT DATE
 -- 2020-08-16 LAST UPDATE

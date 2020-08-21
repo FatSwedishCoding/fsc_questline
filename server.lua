@@ -55,12 +55,18 @@ local _source = source
 quest = {}
 quest[1] = 1
 quest[2] = 2
-local q = math.random(quest[1], quest[2])
+quest[3] = 3
+quest[4] = 3
+local q = math.random(quest[1],quest[2],quest[3],quest[4])
 print(q)
 if q == 1 then
 fsc_letakatt(_source)
 elseif q == 2 then
 fsc_letaring(_source)
+elseif q == 3 then
+fsc_korakaffe(source)
+elseif q == 4 then
+fsc_korakaffe(source)
 else
 end
 end
@@ -68,10 +74,27 @@ end
 -- updrag 3, köra lastbil med kaffe till olika affärer
 function fsc_korakaffe(source)
 local _source = source
-TriggerClientEvent('esx:showNotification', _source,'Det r')
-
+TriggerClientEvent('esx:showNotification', _source,'Min kompis Yngve Tugmotstånd behöver hjälp,')
+Wait(2000)
+TriggerClientEvent('esx:showNotification', _source,'han ger dig mer info, skicka kordinater via google maps')
+restpos = vector3(120.63, -1036.31, 29.28)
+TriggerClientEvent('fsc_questline:yngvepos',_source, restpos)
 end
 
+RegisterServerEvent('fsc_questline:koravaror')
+AddEventHandler('fsc_questline:koravaror', function()
+local _source = source
+TriggerClientEvent('esx:showNotification', _source,'Hej vad bra att vanja skickade efter dig,')
+Wait(2000)
+TriggerClientEvent('esx:showNotification', _source,'Du behöver hämta lite varor åt resturangen,')
+Wait(2000)
+TriggerClientEvent('esx:showNotification', _source,'allt är förbeställt du behöver bara åka dit,')
+Wait(2000)
+TriggerClientEvent('esx:showNotification', _source,'Står en skåpbil på baksidan du kan använda.')
+Wait(2000)
+TriggerClientEvent('esx:showNotification', _source,'Sickar dig Kordinaterna på Google Maps.')
+
+end)
 -- Första konv om sin katt. NYA UPDATEN
 function fsc_letakatt(source)
 local _source = source
@@ -95,6 +118,7 @@ local src = source
 local randomMoney = math.random(600,800)
     xPlayer.addMoney(randomMoney)
 	TriggerClientEvent('esx:showNotification', src, 'Tack så himla mycket för ni hittade Babsan.')
+	Wait(2000)
 	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
 	TriggerClientEvent('fsc_questline:avbrytkamera',src)
 end)
@@ -140,7 +164,18 @@ TriggerClientEvent('fsc_questline:ringpos',_source, avloppos, avloppcords, skatt
 end
 
 
-
+-- Nya updaten
+RegisterServerEvent('fsc_questline:klarrest')
+AddEventHandler('fsc_questline:klarrest', function()
+local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+local randomMoney = math.random(1000,1200)
+    xPlayer.addMoney(randomMoney)
+	TriggerClientEvent('esx:showNotification', src, 'Tack så himla mycket att du hjälpte min pojkvän med körningen.')
+	Wait(2000)
+	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
+	TriggerClientEvent('fsc_questline:avbrytkamera', src)
+end)
 
 -- Nya updaten
 RegisterServerEvent('fsc_questline:klarring')
@@ -150,6 +185,7 @@ local src = source
 local randomMoney = math.random(600,800)
     xPlayer.addMoney(randomMoney)
 	TriggerClientEvent('esx:showNotification', src, 'Tack så himla mycket, nu kan jag träffa min pojkvän igen.')
+	Wait(2000)
 	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
 	TriggerClientEvent('fsc_questline:avbrytkamera', src)
 end)
@@ -189,7 +225,10 @@ RegisterServerEvent('questline_makki3:fyllabilfirmakaffe')
 AddEventHandler('questline_makki3:fyllabilfirmakaffe', function()
 local _source = source
 	local xPlayer = ESX.GetPlayerFromId(_source)
-	TriggerClientEvent('esx:showNotification', _source,'Hej jag har tappat bort min katt, om du hjälpa mig att hitta henne skulle vara jätte snällt.')
+	TriggerClientEvent('esx:showNotification', _source,'Hej jag har tappat bort min katt,')
+	Wait(2000)
+TriggerClientEvent('esx:showNotification', _source,'om du hjälpa mig att hitta henne skulle vara jätte snällt.')
+
 end)
 
 --[[
