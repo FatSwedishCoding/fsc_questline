@@ -54,7 +54,7 @@ function fsc_randomquest(source)
 local _source = source
 quest = {}
 quest[1] = 1
-quest[2] = 2
+quest[2] = 1
 local q = math.random(quest[1], quest[2])
 print(q)
 if q == 1 then

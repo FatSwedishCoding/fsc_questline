@@ -45,6 +45,7 @@ while not NetworkIsSessionStarted() do Wait(0) end
     RenderScriptCams(1, 0, 0, 1, 1)
 			if stuff.hittatkatt then
 			TriggerServerEvent('fsc_questline:klarkatt')
+			TriggerEvent("animation:carry","crate01")
 			stuff.inMission = false
 	        stuff.hittatkatt = false
 	        stuff.inlamnadkatt = false
@@ -89,6 +90,7 @@ while not NetworkIsSessionStarted() do Wait(0) end
     RenderScriptCams(1, 0, 0, 1, 1)
 			if stuff.hittatkatt then
 			TriggerServerEvent('fsc_questline:klarkatto')
+			TriggerEvent("animation:carry","crate01")			
 			stuff.hittatkatt = false
 	        stuff.hittatkatt = false
 	        stuff.inlamnadkatt = false
@@ -156,7 +158,7 @@ Citizen.Wait(1) -- till client
 						slamsugen4 = true
 						stuff.hittatring = true
 						TriggerEvent('esx:showNotification', 'Du hittade Vigselringen, lämna tillbaka den till Vanja.')
-						--TriggerEvent('questline_makki3:avslutaanim')
+						RemoveBlip(pedBlip)
 						fsc_questline_avslutanim()
 						end						
 						end
@@ -184,6 +186,7 @@ Citizen.Wait(1) -- till client
 						slamsugen4 = true
 						stuff.hittatring = true
 						TriggerEvent('esx:showNotification', 'Du hittade Vigselringen, lämna tillbaka den till Vanja.')
+						RemoveBlip(pedBlip)
 						fsc_questline_avslutanim()
 						end						
 						end
@@ -212,6 +215,7 @@ if distance3 < 10 then
 						slamsugen4 = true
 						stuff.hittatring = true
 						TriggerEvent('esx:showNotification', 'Du hittade Vigselringen, lämna tillbaka den till Vanja.')
+						RemoveBlip(pedBlip)
 						fsc_questline_avslutanim()
 						end						
 						end
@@ -239,6 +243,7 @@ if distance3 < 10 then
 						slamsugen4 = true
 						stuff.hittatring = true
 						TriggerEvent('esx:showNotification', 'Du hittade Vigselringen, lämna tillbaka den till Vanja.')
+						RemoveBlip(pedBlip)
 						fsc_questline_avslutanim()
 						end						
 						end
@@ -377,6 +382,6 @@ createPed = function(hash, coords, heading)
 end
 
 -- MADE BY MAKKIE & Abbezon AKA KYLVASKAN!
--- VERSION 1.2.1
+-- VERSION 1.2.2
 -- 2019-03-29 PROJECT DATE
 -- 2020-08-16 LAST UPDATE
