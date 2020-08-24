@@ -3,28 +3,35 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 AddEventHandler( "playerConnecting", function(name)
 	local identifier = GetPlayerIdentifiers(source)[1]
+local currentLocalTime = (("%02d-%02d-%02d %02d:%02d:%02d"):format(0000, 00, 00, 00, 00,00 ))
 	local result = MySQL.Sync.fetchScalar("SELECT * FROM questline WHERE identifier = @identifier", {['@identifier'] = identifier})
 	if not result then
-		MySQL.Sync.execute("INSERT INTO questline (`identifier`, `timeleft`) VALUES (@identifier, @timeleft)",{['@identifier'] = identifier, ['timeleft'] = 0})
-		print('/////////////////////////////// ///////////////////////////////')
-		print('Spelaren med steamnamet ' .. name .. ' lades in i databasen "questline", ' .. name .. 's hexkod är: ' .. identifier)
-		print('/////////////////////////////////////////////////////////////////////////')
-    end
+		MySQL.Sync.execute("INSERT INTO questline (`identifier`, `autotid`) VALUES (@identifier, @timeleft)",{['@identifier'] = identifier, ['timeleft'] = currentLocalTime})
+    print('JAG LA TILL')
+	print('JAG LA TILL')
+	print('JAG LA TILL')
+	print('JAG LA TILL')
+	end
 end)
+----
+-----
 
+-----
 RegisterServerEvent('fsc_questline:linkustart')
 AddEventHandler('fsc_questline:linkustart', function()
 fsc_kollacd()
 end)
 
+
+-- test!
 function fsc_kollacd()
 local date = os.date('*t')
 local data = false
 local _source = source
 local xPlayer = ESX.GetPlayerFromId(_source)
 local identifier = GetPlayerIdentifiers(source)[1]
-local result = MySQL.Sync.fetchScalar("SELECT time FROM questline WHERE identifier = @identifier", {['@identifier'] = identifier})
-local currentLocalTime = (("%02d:%02d:%02d"):format(date.hour, date.min, date.sec))
+local result = MySQL.Sync.fetchScalar("SELECT autotid FROM questline WHERE identifier = @identifier", {['@identifier'] = identifier})
+local currentLocalTime = (("%02d-%02d-%02d %02d:%02d:%02d"):format(date.year, date.month, date.day, date.hour, date.min,date.sec ))
 if result < currentLocalTime then
 data = false
 -- för att randomera questet,
@@ -39,6 +46,7 @@ return
 end
 end
 
+--nya sattcd
 function fsc_sattcd(source)
 local date = os.date('*t')
 local time = os.time()
@@ -46,8 +54,17 @@ local _source = source
 local xPlayer = ESX.GetPlayerFromId(_source)
 local identifier = GetPlayerIdentifiers(source)[1]
 
-local currentLocalTime = (("%02d:%02d:%02d"):format(date.hour + 3, date.min, date.sec))
-MySQL.Async.execute("UPDATE questline SET time =@carthiefv2 WHERE identifier=@identifier", {['@identifier'] = identifier, ['@carthiefv2'] = currentLocalTime})
+local day = date.day
+local hour = date.hour + 3
+if hour > 24 then
+day = date.day + 1
+hour = 0
+end
+
+local currentLocalTime = (("%02d-%02d-%02d %02d:%02d:%02d"):format(date.year,date.month,day,hour, date.min, date.sec))
+
+
+MySQL.Async.execute("UPDATE questline SET autotid =@carthiefv2 WHERE identifier=@identifier", {['@identifier'] = identifier, ['@carthiefv2'] = currentLocalTime})
 end
 
 function fsc_randomquest(source)
@@ -225,41 +242,3 @@ local _source = source
 TriggerClientEvent('esx:showNotification', _source,'om du hjälpa mig att hitta henne skulle vara jätte snällt.')
 
 end)
-
---[[
-RegisterServerEvent('questline_makki3:samsungtid')
-AddEventHandler('questline_makki3:samsungtid', function()
-local date = os.date('*t')
-local time = os.time()
-local cdtid = 360
-
-local _source = source
-local sourceXPlayer = ESX.GetPlayerFromId(_source) 
-local identifier = GetPlayerIdentifiers(source)[1]
-MySQL.Async.execute("UPDATE questline SET timeleft =@carthiefv2 WHERE identifier=@identifier", {['@identifier'] = identifier, ['@carthiefv2'] = '360'})
-
-end)
---]]
---[[
-RegisterServerEvent('questline_makki3:')
-AddEventHandler('questline_makki3:', function()
-end)
-RegisterServerEvent('questline_makki3:')
-AddEventHandler('questline_makki3:', function()
-end)
-RegisterServerEvent('questline_makki3:')
-AddEventHandler('questline_makki3:', function()
-end)
-RegisterServerEvent('questline_makki3:')
-AddEventHandler('questline_makki3:', function()
-end)
-RegisterServerEvent('questline_makki3:')
-AddEventHandler('questline_makki3:', function()
-end)
-RegisterServerEvent('questline_makki3:')
-AddEventHandler('questline_makki3:', function()
-end)
-RegisterServerEvent('questline_makki3:')
-AddEventHandler('questline_makki3:', function()
-end)
-]]

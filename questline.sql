@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Värd: 127.0.0.1
--- Tid vid skapande: 28 jun 2020 kl 01:29
+-- Tid vid skapande: 24 aug 2020 kl 05:41
 -- Serverversion: 10.4.6-MariaDB
 -- PHP-version: 7.3.9
 
@@ -30,8 +30,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `questline` (
   `identifier` varchar(255) NOT NULL,
-  `timeleft` int(11) NOT NULL,
-  `time` time NOT NULL
+  `autotid` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
