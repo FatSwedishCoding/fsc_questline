@@ -52,12 +52,7 @@ end
 
 function fsc_randomquest(source)
 local _source = source
-quest = {}
-quest[1] = 1
-quest[2] = 2
-quest[3] = 3
-quest[4] = 3
-local q = math.random(quest[1],quest[2],quest[3],quest[4])
+local q = math.random(1,4)
 print(q)
 if q == 1 then
 fsc_letakatt(_source)
