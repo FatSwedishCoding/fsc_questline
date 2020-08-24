@@ -110,7 +110,7 @@ while not NetworkIsSessionStarted() do Wait(0) end
 			if stuff.hittayngve then
 			TriggerEvent('fsc_questline:avbrytkamera')
 			stuff.hittayngve = false
-			RemoveBlip(pedBlip)
+			RemoveBlip(pedBlip3)
 			TriggerServerEvent('fsc_questline:koravaror')
 			
 			local vehicleModel1
@@ -401,12 +401,11 @@ stuff.inMission = true
 stuff.hittayngve = true
 TriggerEvent('fsc_questline:avbrytkamera')
 
-local pedBlip = AddBlipForCoord(restpos)
-	SetBlipColour(pedBlip, 1)
+pedBlip3 = AddBlipForCoord(restpos)
+	SetBlipColour(pedBlip3, 1)
 	BeginTextCommandSetBlipName("STRING")
 	AddTextComponentString('Yngves Jobb')
-EndTextCommandSetBlipName(pedBlip)
-TriggerEvent('esx:showNotification', 'blockad 1')
+EndTextCommandSetBlipName(pedBlip3)
 end)
 
 --lägger in katten och allt det. nya versionen!
@@ -536,6 +535,6 @@ createPed = function(hash, coords, heading)
 end
 
 -- MADE BY MAKKIE & Abbezon AKA KYLVASKAN!
--- VERSION 1.3
+-- VERSION 1.3.1
 -- 2019-03-29 PROJECT DATE
 -- 2020-08-16 LAST UPDATE
