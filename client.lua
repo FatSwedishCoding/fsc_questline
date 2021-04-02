@@ -249,6 +249,8 @@ AddEventHandler('fsc_questline:ringpos', function(avloppos, avloppcords, skattja
 stuff.inMission = true
 local skattjaktkoll = 0 -- Client räknar hur många gånger du letat.
 
+SetNewWaypoint(avloppcords)
+
 local pedBlip = AddBlipForCoord(avloppcords) -- till client
 	SetBlipColour(pedBlip, 1) -- till client
 	BeginTextCommandSetBlipName("STRING") -- till client
@@ -419,6 +421,7 @@ kattped = createPed(1462895032, pos, 305.69)
 	
 	--Sätter gps
 	--local pedBlip = AddBlipForEntity(ped)
+	SetNewWaypoint(cords)
 	local pedBlip = AddBlipForCoord(cords)
 	SetBlipColour(pedBlip, 1)
 	BeginTextCommandSetBlipName("STRING")
