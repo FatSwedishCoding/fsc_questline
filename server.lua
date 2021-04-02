@@ -7,10 +7,6 @@ local currentLocalTime = (("%02d-%02d-%02d %02d:%02d:%02d"):format(0000, 00, 00,
 	local result = MySQL.Sync.fetchScalar("SELECT * FROM questline WHERE identifier = @identifier", {['@identifier'] = identifier})
 	if not result then
 		MySQL.Sync.execute("INSERT INTO questline (`identifier`, `autotid`) VALUES (@identifier, @timeleft)",{['@identifier'] = identifier, ['timeleft'] = currentLocalTime})
-    print('JAG LA TILL')
-	print('JAG LA TILL')
-	print('JAG LA TILL')
-	print('JAG LA TILL')
 	end
 end)
 ----
@@ -69,15 +65,13 @@ end
 
 function fsc_randomquest(source)
 local _source = source
-local q = math.random(1,4)
+local q = math.random(1,3)
 print(q)
 if q == 1 then
 fsc_letakatt(_source)
 elseif q == 2 then
 fsc_letaring(_source)
 elseif q == 3 then
-fsc_korakaffe(source)
-elseif q == 4 then
 fsc_korakaffe(source)
 else
 end
@@ -87,9 +81,9 @@ end
 function fsc_korakaffe(source)
 local _source = source
 TriggerClientEvent('esx:showNotification', _source,'Min kompis Yngve Tugmotstånd behöver hjälp,')
-Wait(2000)
+Wait(5000)
 TriggerClientEvent('esx:showNotification', _source,'han ger dig mer info, skicka kordinater via google maps')
-restpos = vector3(120.63, -1036.31, 29.28)
+restpos = vector3(113.5275, -1037.933, 29.32)
 TriggerClientEvent('fsc_questline:yngvepos',_source, restpos)
 end
 
@@ -97,13 +91,13 @@ RegisterServerEvent('fsc_questline:koravaror')
 AddEventHandler('fsc_questline:koravaror', function()
 local _source = source
 TriggerClientEvent('esx:showNotification', _source,'Hej vad bra att vanja skickade efter dig,')
-Wait(2000)
+Wait(5000)
 TriggerClientEvent('esx:showNotification', _source,'Du behöver hämta lite varor åt resturangen,')
-Wait(2000)
+Wait(5000)
 TriggerClientEvent('esx:showNotification', _source,'allt är förbeställt du behöver bara åka dit,')
-Wait(2000)
+Wait(5000)
 TriggerClientEvent('esx:showNotification', _source,'Står en skåpbil på baksidan du kan använda.')
-Wait(2000)
+Wait(5000)
 TriggerClientEvent('esx:showNotification', _source,'Sickar dig Kordinaterna på Google Maps.')
 
 end)
@@ -111,13 +105,13 @@ end)
 function fsc_letakatt(source)
 local _source = source
 TriggerClientEvent('esx:showNotification', _source,'jag har tappat bort min katt, om du hittar henne så skulle du vara jätte snell katt.')
-local kattmatblandare = math.random(1,2)
+local kattmatblandare = math.random(1,2)  -- ändrat för att buggfix, kolla över katten.
 if kattmatblandare  == 1 then
 	   kattpos = vector3(125.64, -1089.39, 28.18)
 	   kattcords = vector3(150.2, -1057.77, 28.18)	   
 	   elseif kattmatblandare == 2 then
-	   kattpos = vector3(-508.41, -1743.5, 19.14)
-	   kattcords = vector3(-511.84, -1715.62, 19.32)
+	   kattpos = vector3(467.68, -867.77, 25.79)
+	   kattcords = vector3(458.32, -838.24, 27.46)
 	   end
 TriggerClientEvent('fsc_questline:kattpos',_source, kattpos, kattcords)
 end
@@ -140,7 +134,7 @@ RegisterServerEvent('fsc_questline:klarkatto')
 AddEventHandler('fsc_questline:klarkatto', function()
 local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-local randomMoney = math.random(400,1000)
+local randomMoney = math.random(800,1200)
     xPlayer.addMoney(randomMoney)
 	TriggerClientEvent('esx:showNotification', src, 'O jävlar en katt. tack så mycket, här får du lite kompesation för den. säg inte till någon.')
 	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')

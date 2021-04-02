@@ -81,7 +81,7 @@ end)
 Citizen.CreateThread(function()
 while not NetworkIsSessionStarted() do Wait(0) end
 	-- Skapar Quest peden.
-    ped3 = createPed(-2054645053, vector3(125.7, -1036.17, 29.28 -1), 70.56)
+    ped3 = createPed(-2054645053, vector3(113.5275, -1037.933, 29.32 -1), 70.56)
 	while true do
 	local me = PlayerPedId()
         local sleep = 200
@@ -98,7 +98,7 @@ while not NetworkIsSessionStarted() do Wait(0) end
     local cam = CreateCam("DEFAULT_SCRIPTED_Camera", 1)	
 	SetCamRot(cam, 0.0, 0.0, 291.93)
 	TriggerEvent('esx:showNotification', 'Hej jag heter Yngve, Älskar att laga mat men FYFAN vad jag hatar katter!')
-    SetCamCoord(cam, vector3(121.27, -1037.04, 30.28))
+    SetCamCoord(cam, vector3(113.36, -1038.25, 29.32))
     RenderScriptCams(1, 0, 0, 1, 1)
 			if stuff.hittatkatt then
 			TriggerServerEvent('fsc_questline:klarkatto')
@@ -406,6 +406,7 @@ pedBlip3 = AddBlipForCoord(restpos)
 	BeginTextCommandSetBlipName("STRING")
 	AddTextComponentString('Yngves Jobb')
 EndTextCommandSetBlipName(pedBlip3)
+SetNewWaypoint(113.5275, -1037.933)
 end)
 
 --lägger in katten och allt det. nya versionen!
@@ -535,6 +536,6 @@ createPed = function(hash, coords, heading)
 end
 
 -- MADE BY MAKKIE & Abbezon AKA KYLVASKAN!
--- VERSION 1.3.1
+-- VERSION 1.3.3
 -- 2019-03-29 PROJECT DATE
 -- 2020-08-16 LAST UPDATE
