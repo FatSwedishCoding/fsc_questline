@@ -9,7 +9,10 @@ local stuff = {
 	hittatring = false,
 	hittayngve = false,
 	lamnatvara = false,
-	vehicle = false
+	vehicle = false,
+	hittayngvebil = false,
+	ylabyrint = false,
+	yval = false
 	}
 
 Citizen.CreateThread(function()
@@ -17,6 +20,58 @@ Citizen.CreateThread(function()
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 		Citizen.Wait(0)
 	end
+end)
+
+
+-- Quest 4 NPC: Ulla.
+Citizen.CreateThread(function()
+while not NetworkIsSessionStarted() do Wait(0) end
+	-- Skapar Quest peden.
+    ped4 = createPed(-1656894598, vector3(-2291.08, 225.34, 166.60), 30.56)
+	while true do
+	local me = PlayerPedId()
+        local sleep = 200
+        local distance = GetDistanceBetweenCoords(GetEntityCoords(me), GetEntityCoords(ped4))
+        if distance > 3.0 then
+            sleep = 200
+			else
+			sleep = 5
+			 BeginTextCommandDisplayHelp('STRING')
+            AddTextComponentSubstringPlayerName(('~INPUT_CONTEXT~ Prata med %s'):format('Ulla Skalpel'))
+			 EndTextCommandDisplayHelp(0, false, true, -1)
+            if IsControlJustReleased(0, 38) then
+			FreezeEntityPosition(PlayerPedId(), true)
+			cutsceneOver = GetGameTimer() + (1000 * 4)
+    local cam = CreateCam("DEFAULT_SCRIPTED_Camera", 1)	
+	SetCamRot(cam, 0.0, 0.0, 291.93)
+	TriggerEvent('esx:showNotification', 'Hej jag heter Ulla, Jag väntar på någon här.')
+    SetCamCoord(cam, vector3(-2291.0, 229.6884, 170.0))
+	SetCamRot(cam, 0.0, 0.0, 180.0)
+    RenderScriptCams(1, 0, 0, 1, 1)
+	if stuff.ylabyrint then
+	stuff.ylabyrint = false
+	TriggerEvent('esx:showNotification', 'Du ser Yngve ha sex med Ulla, du står där och kollar i 5 min.')
+	Wait(5000)
+	TriggerEvent('esx:showNotification', 'Du blir påkommen av Ulla som blir helt röd i ansiktet.')
+	Wait(5000)
+	TriggerEvent('esx:showNotification', 'Yngve: Shit shit, min flickvän skickade dig va?')
+	Wait(5000)
+	TriggerEvent('esx:showNotification', 'Yngve: Snälla säg inget till henne så får du en fin belöning.')
+	Wait(5000)
+	TriggerEvent('esx:showNotification', 'Yngve: Kom ner till mig vid resturangen så betalar jag dig för din tystnad.')
+	Wait(4000)
+	TriggerEvent('esx:showNotification', 'Du har ett val att göra! prata med Vanja eller med Yngve.')
+	yval = true
+	Wait(4000)
+	end
+	
+	Wait(2000)
+			TriggerEvent('fsc_questline:avbrytkamera')
+			end
+			Wait(5)
+			end
+			Wait(5)
+			end
 end)
 
 
@@ -41,11 +96,14 @@ while not NetworkIsSessionStarted() do Wait(0) end
             AddTextComponentSubstringPlayerName(('~INPUT_CONTEXT~ Prata med %s'):format('Vanja Andersson'))
 			 EndTextCommandDisplayHelp(0, false, true, -1)
             if IsControlJustReleased(0, 38) then
+			FreezeEntityPosition(PlayerPedId(), true)
 			cutsceneOver = GetGameTimer() + (1000 * 4)
     local cam = CreateCam("DEFAULT_SCRIPTED_Camera", 1)	
 	TriggerEvent('esx:showNotification', 'Hej jag heter Vanja Andersson trevligt att träffas.')
     SetCamCoord(cam, vector3(240.5, -895.53, 33.00))
     RenderScriptCams(1, 0, 0, 1, 1)
+	        
+			--Quest 1: Inlämmning
 			if stuff.hittatkatt then
 			TriggerServerEvent('fsc_questline:klarkatt')
 			TriggerEvent("animation:carry","crate01")
@@ -54,18 +112,30 @@ while not NetworkIsSessionStarted() do Wait(0) end
 	        stuff.inlamnadkatt = false
 			return
 			end
+			--Quest 2: inlämmnng
 			if stuff.hittatring then
 			TriggerServerEvent('fsc_questline:klarring')
 			stuff.inMission = false
 	        stuff.hittatring = false			
 			return
 			end
+			--Quest 3: inlämmnng
 			if stuff.lamnatvara then
 			TriggerServerEvent('fsc_questline:klarrest')
 			stuff.inMission = false
 			stuff.hittayngve = true
 	        stuff.lamnatvara = false
 	        vehicle = false
+			return
+			end
+			--Quest 4: Inlämmning
+			if stuff.yval then
+			 inMission = false
+			 vehicle = false
+			 hittayngvebil = false
+			 ylabyrint = true
+			 yval = false
+			 TriggerServerEvent('fsc_questline:klarotrogen1')			 
 			return
 			end
 			
@@ -77,7 +147,7 @@ while not NetworkIsSessionStarted() do Wait(0) end
 			end
 end)
 
--- Quest Giver NYA UPDATEN Yngve
+-- Quest 3: NPC Yngve.
 Citizen.CreateThread(function()
 while not NetworkIsSessionStarted() do Wait(0) end
 	-- Skapar Quest peden.
@@ -131,7 +201,17 @@ while not NetworkIsSessionStarted() do Wait(0) end
 	TaskWarpPedIntoVehicle(GetPlayerPed(-1), stuff.vehicle, -1)
 			hemta()
 			TriggerEvent('fsc_questline:avbrytkamera')
-			end		
+			end
+    if stuff.yval then
+			 inMission = false
+			 vehicle = false
+			 hittayngvebil = false
+			 ylabyrint = true
+			 yval = false
+			 TriggerServerEvent('fsc_questline:klarotrogen2')			 
+			return
+			end
+			
 			TriggerEvent('fsc_questline:avbrytkamera')
 			end
 			Wait(5)
@@ -243,7 +323,77 @@ end
 end
 end
 
--- lägger in ringarna och allt det nya versionen.
+-- Quest 4: find Yngve
+RegisterNetEvent('fsc_questline:findygnve')
+AddEventHandler('fsc_questline:findygnve', function(yngvebilpos)
+SetNewWaypoint(yngvebilpos)
+
+pedBlip = AddBlipForCoord(yngvebilpos) -- till client
+	SetBlipColour(pedBlip, 1) -- till client
+	BeginTextCommandSetBlipName("STRING") -- till client
+	AddTextComponentString('Yngve parkade bil.') -- till client
+EndTextCommandSetBlipName(pedBlip) -- till client
+
+TriggerEvent('fsc_questline:avbrytkamera')
+followygnve(yngvebilpos)
+end)
+
+-- Quest 4: Follow Yngve
+function followygnve(yngvebilpos1)
+-- random what vehicle Yngve whould drive.
+
+vehicleModel = GetHashKey("Burrito")
+RequestModel(vehicleModel)
+ while not HasModelLoaded(vehicleModel) do Wait(0) end
+ 
+ while stuff.hittayngvebil == false do
+  if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), vector3(yngvebilpos1), true) <= 40.5 then
+  stuff.hittayngvebil = true
+ stuff.vehicle = CreateVehicle(vehicleModel, vector3(44.21, -869.86, 30.47), 224, true, true)
+    NetworkRegisterEntityAsNetworked(stuff.vehicle)
+    SetVehicleDoorsLocked(stuff.vehicle, 4)
+    SetVehicleDoorsLockedForAllPlayers(stuff.vehicle, true)
+	TriggerEvent('esx:showNotification', 'Sms från Vanja: Följ efter Yngve bil, han får inte upptäcka dig!')
+	RemoveBlip(pedBlip)
+	Wait(4000)
+	local hash = -2054645053
+	RequestModel(hash)
+	while not HasModelLoaded(hash) do Wait(5) end
+    stuff.driver = CreatePedInsideVehicle(stuff.vehicle, 4, hash, -1, true, false)
+    SetPedHearingRange(stuff.driver, 0.0)
+    SetPedSeeingRange(stuff.driver, 0.0)
+    SetPedAlertness(stuff.driver, 0.0)
+    SetBlockingOfNonTemporaryEvents(stuff.driver, true)
+	
+	local parking = false
+	local drivecords = vector3(-2312, 443.24, 174.04)
+	TaskVehicleDriveToCoordLongrange(stuff.driver, stuff.vehicle, drivecords, 50.0, 387, 5)
+    Wait(1500)
+	while parking == false do
+	if GetDistanceBetweenCoords(GetEntityCoords(stuff.vehicle), vector3(drivecords), true) <= 35.0 and not parking then
+	TriggerEvent('esx:showNotification', 'wlad2')
+                            parking = true
+                            ClearPedTasks(stuff.driver)
+                            ClearPedSecondaryTask(stuff.driver)
+							TaskVehiclePark(stuff.driver, stuff.vehicle, drivecords, 350, 0, 40.0, false)
+							 TaskLeaveVehicle(stuff.driver, stuff.vehicle, 0)
+							 TaskWanderInArea(stuff.driver, drivecords, 15.0, 5, 10)
+							 Wait(5000)
+							 TriggerEvent('esx:showNotification', 'wlad3')
+							 DeleteEntity(stuff.vehicle)
+							 DeleteEntity(stuff.driver)
+							TriggerEvent('esx:showNotification', 'Sms från Vanja: följ efter Yngve in i labyrinten')
+							stuff.ylabyrint = true
+                        end
+						Wait(5000)
+						end
+						
+	end
+	Wait(7000)
+	end
+end
+
+-- Quest 2: lägger in ringarna och allt.
 RegisterNetEvent('fsc_questline:ringpos')
 AddEventHandler('fsc_questline:ringpos', function(avloppos, avloppcords, skattjakt,avloppletare1, avloppletare2,avloppletare3, avloppletare4)
 stuff.inMission = true
@@ -284,14 +434,12 @@ Citizen.Wait(1) -- till client
                         if distance1 < 2 then 
 						if IsControlJustReleased(0, 54) then
 						
-						--TriggerEvent('questline_makki3:goranim')
 						fsc_questline_goranim() -- nya function för göra anim.
 						Wait(4000)
 						skattjaktkoll = skattjaktkoll + 1
 						if skattjaktkoll < skattjakt then
 						slamsugen1 = true
 						TriggerEvent('esx:showNotification', 'Du hittade inget i avföringen, fortsätt leta. ')
-						--TriggerEvent('questline_makki3:avslutaanim')
 						fsc_questline_avslutanim()
 						else
 						slamsugen1 = true
@@ -538,7 +686,7 @@ createPed = function(hash, coords, heading)
     return peds
 end
 
--- MADE BY MAKKIE & Abbezon AKA KYLVASKAN!
--- VERSION 1.3.3
+-- MADE BY MAKKIE
+-- VERSION 1.4 
 -- 2019-03-29 PROJECT DATE
--- 2020-08-16 LAST UPDATE
+-- 2021-04-03 LAST UPDATE

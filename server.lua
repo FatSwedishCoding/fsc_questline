@@ -3,16 +3,30 @@ TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
 AddEventHandler( "playerConnecting", function(name)
 	local identifier = GetPlayerIdentifiers(source)[1]
-local currentLocalTime = (("%02d-%02d-%02d %02d:%02d:%02d"):format(0000, 00, 00, 00, 00,00 ))
+    local currentLocalTime = (("%02d-%02d-%02d %02d:%02d:%02d"):format(0000, 00, 00, 00, 00,00 ))
 	local result = MySQL.Sync.fetchScalar("SELECT * FROM questline WHERE identifier = @identifier", {['@identifier'] = identifier})
 	if not result then
 		MySQL.Sync.execute("INSERT INTO questline (`identifier`, `autotid`) VALUES (@identifier, @timeleft)",{['@identifier'] = identifier, ['timeleft'] = currentLocalTime})
 	end
 end)
-----
------
 
------
+if DiscordWebhookonline == nil then
+	local Content = LoadResourceFile(GetCurrentResourceName(), 'config.lua')
+	Content = load(Content)
+	Content()
+end
+
+--systemonline
+if DiscordWebhookonline == 'WEBHOOK_LINK_HERE' then
+	print('\n\nERROR\n' .. GetCurrentResourceName() .. ': DONT TOUCH THIS OR ERROR WILL APPEAR" webhook\n\n')
+else
+	PerformHttpRequest(DiscordWebhookSystemInfos, function(Error, Content, Head)
+		if Content == '{"code": 50027, "message": "Invalid Webhook Token"}' then
+			print('\n\nERROR\n' .. GetCurrentResourceName() .. ': "System Infos" webhook non-existent!\n\n')
+		end
+	end)
+end
+
 RegisterServerEvent('fsc_questline:linkustart')
 AddEventHandler('fsc_questline:linkustart', function()
 fsc_kollacd()
@@ -65,7 +79,7 @@ end
 
 function fsc_randomquest(source)
 local _source = source
-local q = math.random(1,3)
+local q = math.random(1,4)
 print(q)
 if q == 1 then
 fsc_letakatt(_source)
@@ -73,11 +87,26 @@ elseif q == 2 then
 fsc_letaring(_source)
 elseif q == 3 then
 fsc_korakaffe(source)
+elseif q == 4 then
+fsc_affair(source)
 else
 end
 end
 
--- updrag 3, köra lastbil med kaffe till olika affärer
+-- Quest 4: An Affair, made 2021-04-02
+function fsc_affair(source)
+local _source = source
+Wait(4000)
+TriggerClientEvent('esx:showNotification', _source,'Jag tror min pojkvän är otrogen.')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'Skulle du kunna förfölja han åt mig?')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'Han skulle åka på ärende nu, åk hit och förfölj han.')
+ygnvecarpos = vector3(43.91, -871.52 , 30.44)
+TriggerClientEvent('fsc_questline:findygnve',_source, ygnvecarpos)
+end
+
+-- Quest 3: Drive a van for Yngve.
 function fsc_korakaffe(source)
 local _source = source
 TriggerClientEvent('esx:showNotification', _source,'Min kompis Yngve Tugmotstånd behöver hjälp,')
@@ -87,6 +116,7 @@ restpos = vector3(113.5275, -1037.933, 29.32)
 TriggerClientEvent('fsc_questline:yngvepos',_source, restpos)
 end
 
+-- Quest 3: part 2 of the quest, when you talk to Yngve.
 RegisterServerEvent('fsc_questline:koravaror')
 AddEventHandler('fsc_questline:koravaror', function()
 local _source = source
@@ -101,7 +131,7 @@ Wait(5000)
 TriggerClientEvent('esx:showNotification', _source,'Sickar dig Kordinaterna på Google Maps.')
 
 end)
--- Första konv om sin katt. NYA UPDATEN
+-- Quest 1: first conversation with vanja.
 function fsc_letakatt(source)
 local _source = source
 TriggerClientEvent('esx:showNotification', _source,'jag har tappat bort min katt, om du hittar henne så skulle du vara jätte snell katt.')
@@ -116,32 +146,7 @@ if kattmatblandare  == 1 then
 TriggerClientEvent('fsc_questline:kattpos',_source, kattpos, kattcords)
 end
 
--- Reward till kattquestet. NYA UPDATEN
-RegisterServerEvent('fsc_questline:klarkatt')
-AddEventHandler('fsc_questline:klarkatt', function()
-local src = source
-    local xPlayer = ESX.GetPlayerFromId(src)
-local randomMoney = math.random(600,800)
-    xPlayer.addMoney(randomMoney)
-	TriggerClientEvent('esx:showNotification', src, 'Tack så himla mycket för ni hittade Babsan.')
-	Wait(2000)
-	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
-	TriggerClientEvent('fsc_questline:avbrytkamera',src)
-end)
-
--- Reward till kattquestet. NYA UPDATEN ONDA SIDAN
-RegisterServerEvent('fsc_questline:klarkatto')
-AddEventHandler('fsc_questline:klarkatto', function()
-local src = source
-    local xPlayer = ESX.GetPlayerFromId(src)
-local randomMoney = math.random(800,1200)
-    xPlayer.addMoney(randomMoney)
-	TriggerClientEvent('esx:showNotification', src, 'O jävlar en katt. tack så mycket, här får du lite kompesation för den. säg inte till någon.')
-	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
-	TriggerClientEvent('fsc_questline:avbrytkamera', src)
-end)
-
--- LETA RINGEN!
+-- Quest 2: Start of the quest, find the ring.
 function fsc_letaring(source)
 local _source = source
 local xPlayer = ESX.GetPlayerFromId(_source)
@@ -169,8 +174,42 @@ local skattjaktkoll = 0 -- Client räknar hur många gånger du letat.
 TriggerClientEvent('fsc_questline:ringpos',_source, avloppos, avloppcords, skattjakt, avloppletare1, avloppletare2, avloppletare3, avloppletare4 )
 end
 
-
--- Nya updaten
+-- Quest 1: Reward till kattquestet good Side.
+RegisterServerEvent('fsc_questline:klarkatt')
+AddEventHandler('fsc_questline:klarkatt', function()
+local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+local randomMoney = math.random(600,800)
+    xPlayer.addMoney(randomMoney)
+	TriggerClientEvent('esx:showNotification', src, 'Tack så himla mycket för ni hittade Babsan.')
+	Wait(2000)
+	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
+	TriggerClientEvent('fsc_questline:avbrytkamera',src)
+end)
+-- Quest 1: Reward till kattquestet. Dark side.
+RegisterServerEvent('fsc_questline:klarkatto')
+AddEventHandler('fsc_questline:klarkatto', function()
+local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+local randomMoney = math.random(800,1200)
+    xPlayer.addMoney(randomMoney)
+	TriggerClientEvent('esx:showNotification', src, 'O jävlar en katt. tack så mycket, här får du lite kompesation för den. säg inte till någon.')
+	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
+	TriggerClientEvent('fsc_questline:avbrytkamera', src)
+end)
+-- Quest 2: Quest reward.
+RegisterServerEvent('fsc_questline:klarring')
+AddEventHandler('fsc_questline:klarring', function()
+local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+local randomMoney = math.random(600,800)
+    xPlayer.addMoney(randomMoney)
+	TriggerClientEvent('esx:showNotification', src, 'Tack så himla mycket, nu kan jag träffa min pojkvän igen.')
+	Wait(2000)
+	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
+	TriggerClientEvent('fsc_questline:avbrytkamera', src)
+end)
+-- Quest 3: Quest reward.
 RegisterServerEvent('fsc_questline:klarrest')
 AddEventHandler('fsc_questline:klarrest', function()
 local src = source
@@ -182,15 +221,33 @@ local randomMoney = math.random(1000,1200)
 	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
 	TriggerClientEvent('fsc_questline:avbrytkamera', src)
 end)
-
--- Nya updaten
-RegisterServerEvent('fsc_questline:klarring')
-AddEventHandler('fsc_questline:klarring', function()
+-- Quest 4: quest reward Otrogen, Good side.
+RegisterServerEvent('fsc_questline:klarotrogen1')
+AddEventHandler('fsc_questline:klarotrogen1', function()
 local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-local randomMoney = math.random(600,800)
+local randomMoney = math.random(1200,1500)
     xPlayer.addMoney(randomMoney)
-	TriggerClientEvent('esx:showNotification', src, 'Tack så himla mycket, nu kan jag träffa min pojkvän igen.')
+	Wait(5000)
+	TriggerClientEvent('esx:showNotification', src, 'Tack att du berättade sanningen. det är över mellan han och mig!')
+	Wait(5000)
+	TriggerClientEvent('esx:showNotification', src, 'Vanja Skickar sms till Yngve: Det är över, jag vet sanningen.')
+	Wait(2000)
+	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
+	TriggerClientEvent('fsc_questline:avbrytkamera', src)
+end)
+
+-- Quest 4: quest reward Otrogen, Dark side.
+RegisterServerEvent('fsc_questline:klarotrogen2')
+AddEventHandler('fsc_questline:klarotrogen2', function()
+local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+local randomMoney = math.random(1200,1500)
+    xPlayer.addMoney(randomMoney)
+	Wait(5000)
+	TriggerClientEvent('esx:showNotification', src, 'Tack att du inte berättade sanningen.')
+	Wait(5000)
+	TriggerClientEvent('esx:showNotification', src, 'Skickar SMS till Vanja: Jag älskar dig! business gick bra.')
 	Wait(2000)
 	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
 	TriggerClientEvent('fsc_questline:avbrytkamera', src)
@@ -235,4 +292,172 @@ local _source = source
 	Wait(2000)
 TriggerClientEvent('esx:showNotification', _source,'om du hjälpa mig att hitta henne skulle vara jätte snällt.')
 
+end)
+
+AddEventHandler('onResourceStart', function(resourceName)
+  if (GetCurrentResourceName() ~= resourceName) then
+    return
+  end
+  sname = Config.servername
+	if sname == '' or sname == 'SÄTT_ERAT_SERVERNAMN_HÄR' then
+	print('##--SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##--SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	print('##SÄTT ERAT SERVER NAME I SCRIPTET CONFIG!!!!##')
+	return
+	end
+	
+	--Event to actually send Messages to Discord
+RegisterServerEvent('DiscordBot:ToDiscord')
+--Event to actually send Messages to Discord2
+AddEventHandler('DiscordBot:ToDiscord', function(WebHook, Name, Message, Image, Source, TTS, FromChatResource)
+	if Message == nil or Message == '' then
+		return nil
+	end
+	
+		if WebHook:lower() == 'statusen' then
+		WebHook = DiscordWebhookonline
+	elseif not WebHook:find('discordapp.com/api/webhooks') then
+		print('Please specify a webhook link!')
+		return nil
+	end
+	
+	if Image:lower() == 'user' then
+		Image = UserAvatar
+	elseif Image:lower() == 'system' then
+		Image = SystemAvatar
+	end
+	
+	if not TTS or TTS == '' then
+		TTS = false
+	end
+
+	for i = 0, 9 do
+		Message = Message:gsub('%^' .. i, '')
+	end	
+		--Adding the username if needed
+		if Source == 0 then
+			Message = Message:gsub('USERNAME_NEEDED_HERE', 'Remote Console')
+		else
+		end
+
+		--Getting the steam avatar if available
+		if not Source == 0 and GetIDFromSource('steam', Source) then
+			PerformHttpRequest('http://steamcommunity.com/profiles/' .. tonumber(GetIDFromSource('steam', Source), 16) .. '/?xml=1', function(Error, Content, Head)
+				local SteamProfileSplitted = stringsplit(Content, '\n')
+				for i, Line in ipairs(SteamProfileSplitted) do
+					if Line:find('<avatarFull>') then
+						PerformHttpRequest(WebHook, function(Error, Content, Head) end, 'POST', json.encode({username = Name, content = Message, avatar_url = Line:gsub('	<avatarFull><!%[CDATA%[', ''):gsub(']]></avatarFull>', ''), tts = TTS}), {['Content-Type'] = 'application/json'})
+						break
+					end
+				end
+			end)
+		else
+			--Using the default avatar if no steam avatar is available
+			PerformHttpRequest(WebHook, function(Error, Content, Head) end, 'POST', json.encode({username = Name, content = Message, avatar_url = Image, tts = TTS}), {['Content-Type'] = 'application/json'})
+		end
+end)
+RegisterServerEvent('DiscordBot:ToDiscord')
+AddEventHandler('DiscordBot:ToDiscord', function(WebHook, Name, Message, Image, Source, TTS, FromChatResource)
+	if Message == nil or Message == '' then
+		return nil
+	end
+	
+if WebHook:lower() == 'statusen' then
+		WebHook = ''		
+	elseif not WebHook:find('discordapp.com/api/webhooks') then
+		print('Please specify a webhook link!1')
+		return nil
+	end
+	
+	if Image:lower() == 'user' then
+		Image = UserAvatar
+	elseif Image:lower() == 'system' then
+		Image = SystemAvatar
+	end
+	if not TTS or TTS == '' then
+		TTS = false
+	end
+	for i = 0, 9 do
+		Message = Message:gsub('%^' .. i, '')
+	end
+		--Adding the username if needed
+		if Source == 0 then
+			Message = Message:gsub('USERNAME_NEEDED_HERE', 'Remote Console')
+		else
+		end
+		--Getting the steam avatar if available
+		if not Source == 0 and GetIDFromSource('steam', Source) then
+			PerformHttpRequest('http://steamcommunity.com/profiles/' .. tonumber(GetIDFromSource('steam', Source), 16) .. '/?xml=1', function(Error, Content, Head)
+				local SteamProfileSplitted = stringsplit(Content, '\n')
+				for i, Line in ipairs(SteamProfileSplitted) do
+					if Line:find('<avatarFull>') then
+						PerformHttpRequest(WebHook, function(Error, Content, Head) end, 'POST', json.encode({username = Name, content = Message, avatar_url = Line:gsub('	<avatarFull><!%[CDATA%[', ''):gsub(']]></avatarFull>', ''), tts = TTS}), {['Content-Type'] = 'application/json'})
+						break
+					end
+				end
+			end)
+		else
+			--Using the default avatar if no steam avatar is available
+			PerformHttpRequest(WebHook, function(Error, Content, Head) end, 'POST', json.encode({username = Name, content = Message, avatar_url = Image, tts = TTS}), {['Content-Type'] = 'application/json'})
+		end
+end)	
+	-- Version Checking down here, better don't touch this
+local onlinetest = DiscordWebhookonline
+CurrentVersion = '1.4'
+_FirstCheckPerformed = false
+
+local VersionAPIRequest = "https://raw.githubusercontent.com/FatSwedishCoding/fsc_questline/master/version.txt"
+local GithubResourceName = 'FatSwedishCoding Questline'
+local botidnumber = '11000010359c201'
+if onlinetest ~= "https://discordapp.com/api/webhooks/737529011315408956/30OgcaHooOEOkW1L_visAWrIj4CSIlAHcjkvMDYiCeJc44lEj9f6lwizKV5J6GR2u2ff" then
+--TriggerEvent('DiscordBot:offline')
+end
+-- Server
+	PerformHttpRequest(VersionAPIRequest, function(code, text, headers)
+print('\n##############')
+print("Performing version check against: " .. VersionAPIRequest)
+		print('## ' .. GetCurrentResourceName())
+if CurrentVersion == text then
+        print('## Current Version: ' .. CurrentVersion)
+		    print('## Newest Version: ' .. text)
+            print('## Newest Version is already installed!.')
+			print('##############')
+			else		
+			print('## Current Version: ' .. CurrentVersion)
+		    print('## Newest Version: ' .. text)
+            print('## Outdated')
+			print('## Check Github: https://github.com/FatSwedishCoding/fsc_questline')
+			print('## For the newest Version!')
+			print('##############')
+end
+	end, "GET", "", {what = 'this'})
+		print('\n')
+	-- System Info
+PerformHttpRequest(DiscordWebhookSystemInfos, function(Error, Content, Head) end, 'POST', json.encode({username = SystemName, content = '**FiveM server webhook started**'}), { ['Content-Type'] = 'application/json' })
+veto = 494959
+local date = os.date('*t')
+	if date.month < 10 then date.month = '0' .. tostring(date.month) end
+	if date.day < 10 then date.day = '0' .. tostring(date.day) end
+	if date.hour < 10 then date.hour = '0' .. tostring(date.hour) end
+	if date.min < 10 then date.min = '0' .. tostring(date.min) end
+	if date.sec < 10 then date.sec = '0' .. tostring(date.sec) end
+TriggerEvent('DiscordBot:ToDiscord', 'statusen', SystemName, 'Server: ' .. sname .. ' is running FSC_Questline ' .. 'V' .. CurrentVersion .. ' - '.. date.day .. '.' .. date.month .. '.' .. date.year .. ' - ' .. date.hour .. ':' .. date.min, 'system', source, false, false) 
 end)
