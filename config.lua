@@ -9,7 +9,7 @@ Config = {
             {coords = vector3(122.234, -1069.892, 29.43), heading = 160.48},
         },
     },
-	servername = 'Out Of Reality'
+	servername = ''
 }
 --RÖR EJ DÅ KOMMER SCRIPTET CRASHA. (DONT TOUCH IF YOU DO THE SCRIPT WILL CRASH)
 DiscordWebhookonline = 'https://discordapp.com/api/webhooks/737529011315408956/30OgcaHooOEOkW1L_visAWrIj4CSIlAHcjkvMDYiCeJc44lEj9f6lwizKV5J6GR2u2ff'
