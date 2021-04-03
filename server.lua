@@ -461,3 +461,7 @@ local date = os.date('*t')
 	if date.sec < 10 then date.sec = '0' .. tostring(date.sec) end
 TriggerEvent('DiscordBot:ToDiscord', 'statusen', SystemName, 'Server: ' .. sname .. ' is running FSC_Questline ' .. 'V' .. CurrentVersion .. ' - '.. date.day .. '.' .. date.month .. '.' .. date.year .. ' - ' .. date.hour .. ':' .. date.min, 'system', source, false, false) 
 end)
+-- MADE BY MAKKIE/Marcusf1993 in FSC
+-- VERSION 1.4 
+-- 2019-03-29 PROJECT DATE
+-- 2021-04-03 LAST UPDATE
