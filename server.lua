@@ -96,7 +96,7 @@ local _source = source
 -- ÄNDRAT FÖR NYA QUEST (EJ AKTIV)
 local q = math.random(1,5)
 print(q)
-
+-- FOR DEV ONLY!
 if devmode then
 local player = ESX.GetPlayerFromId(source)
 local idcheck = player["characterId"]

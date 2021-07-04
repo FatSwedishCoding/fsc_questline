@@ -31,56 +31,6 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 	end
 end)
--- Quest 4 NPC: Ulla.
-Citizen.CreateThread(function()
-while not NetworkIsSessionStarted() do Wait(0) end
-	-- Skapar Quest peden.
-    ped4 = createPed(-1656894598, vector3(-2291.08, 225.34, 166.60), 30.56)
-	while true do
-	local me = PlayerPedId()
-        local sleep = 200
-        local distance = GetDistanceBetweenCoords(GetEntityCoords(me), GetEntityCoords(ped4))
-        if distance > 3.0 then
-            sleep = 200
-			else
-			sleep = 5
-			 BeginTextCommandDisplayHelp('STRING')
-            AddTextComponentSubstringPlayerName(('~INPUT_CONTEXT~ Prata med %s'):format('Ulla Skalpel'))
-			 EndTextCommandDisplayHelp(0, false, true, -1)
-            if IsControlJustReleased(0, 38) then
-			FreezeEntityPosition(PlayerPedId(), true)
-			cutsceneOver = GetGameTimer() + (1000 * 4)
-    local cam = CreateCam("DEFAULT_SCRIPTED_Camera", 1)	
-	SetCamRot(cam, 0.0, 0.0, 291.93)
-	TriggerEvent('esx:showNotification', 'Hej jag heter Ulla, Jag väntar på någon här.')
-    SetCamCoord(cam, vector3(-2291.0, 229.6884, 170.0))
-	SetCamRot(cam, 0.0, 0.0, 180.0)
-    RenderScriptCams(1, 0, 0, 1, 1)
-	if stuff.ylabyrint then
-	stuff.ylabyrint = false
-	TriggerEvent('esx:showNotification', 'Du ser Yngve ha sex med Ulla, du står där och kollar i 5 min.')
-	Wait(5000)
-	TriggerEvent('esx:showNotification', 'Du blir påkommen av Ulla som blir helt röd i ansiktet.')
-	Wait(5000)
-	TriggerEvent('esx:showNotification', 'Yngve: Shit shit, min flickvän skickade dig va?')
-	Wait(5000)
-	TriggerEvent('esx:showNotification', 'Yngve: Snälla säg inget till henne så får du en fin belöning.')
-	Wait(5000)
-	TriggerEvent('esx:showNotification', 'Yngve: Kom ner till mig vid resturangen så betalar jag dig för din tystnad.')
-	Wait(4000)
-	TriggerEvent('esx:showNotification', 'Du har ett val att göra! prata med Vanja eller med Yngve.')
-	stuff.yval = true
-	Wait(15000)
-	end
-	
-	Wait(2000)
-			TriggerEvent('fsc_questline:avbrytkamera')
-			end
-			Wait(5)
-			end
-			Wait(5)
-			end
-end)
 
 -- Quest Giver NYA UPDATEN VANJA
 Citizen.CreateThread(function()
@@ -300,6 +250,278 @@ return
 			end
 end)
 
+-- Quest 4 NPC: Ulla.
+Citizen.CreateThread(function()
+while not NetworkIsSessionStarted() do Wait(0) end
+	-- Skapar Quest peden.
+    ped4 = createPed(-1656894598, vector3(-2291.08, 225.34, 166.60), 30.56)
+	while true do
+	local me = PlayerPedId()
+        local sleep = 200
+        local distance = GetDistanceBetweenCoords(GetEntityCoords(me), GetEntityCoords(ped4))
+        if distance > 3.0 then
+            sleep = 200
+			else
+			sleep = 5
+			 BeginTextCommandDisplayHelp('STRING')
+            AddTextComponentSubstringPlayerName(('~INPUT_CONTEXT~ Prata med %s'):format('Ulla Skalpel'))
+			 EndTextCommandDisplayHelp(0, false, true, -1)
+            if IsControlJustReleased(0, 38) then
+			FreezeEntityPosition(PlayerPedId(), true)
+			cutsceneOver = GetGameTimer() + (1000 * 4)
+    local cam = CreateCam("DEFAULT_SCRIPTED_Camera", 1)	
+	SetCamRot(cam, 0.0, 0.0, 291.93)
+	TriggerEvent('esx:showNotification', 'Hej jag heter Ulla, Jag väntar på någon här.')
+    SetCamCoord(cam, vector3(-2291.0, 229.6884, 170.0))
+	SetCamRot(cam, 0.0, 0.0, 180.0)
+    RenderScriptCams(1, 0, 0, 1, 1)
+	if stuff.ylabyrint then
+	stuff.ylabyrint = false
+	TriggerEvent('esx:showNotification', 'Du ser Yngve ha sex med Ulla, du står där och kollar i 5 min.')
+	Wait(5000)
+	TriggerEvent('esx:showNotification', 'Du blir påkommen av Ulla som blir helt röd i ansiktet.')
+	Wait(5000)
+	TriggerEvent('esx:showNotification', 'Yngve: Shit shit, min flickvän skickade dig va?')
+	Wait(5000)
+	TriggerEvent('esx:showNotification', 'Yngve: Snälla säg inget till henne så får du en fin belöning.')
+	Wait(5000)
+	TriggerEvent('esx:showNotification', 'Yngve: Kom ner till mig vid resturangen så betalar jag dig för din tystnad.')
+	Wait(4000)
+	TriggerEvent('esx:showNotification', 'Du har ett val att göra! prata med Vanja eller med Yngve.')
+	stuff.yval = true
+	Wait(15000)
+	end
+	
+	Wait(2000)
+			TriggerEvent('fsc_questline:avbrytkamera')
+			end
+			Wait(5)
+			end
+			Wait(5)
+			end
+end)
+-- NPC SLUT
+
+-- Quest Start
+
+--lägger in katten och allt det. nya versionen! Quest 1.
+RegisterNetEvent('fsc_questline:kattpos')
+AddEventHandler('fsc_questline:kattpos', function(pos, cords)
+stuff.inMission = true
+    TriggerEvent('fsc_questline:avbrytkamera')
+	
+	--Sätter gps
+	--local pedBlip = AddBlipForEntity(ped)
+	SetNewWaypoint(cords)
+	local pedBlip = AddBlipForCoord(cords)
+	SetBlipColour(pedBlip, 1)
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentString('Babsans GPS')
+EndTextCommandSetBlipName(pedBlip)
+
+-- kollar om mission är igång, 
+	 while stuff.inMission do
+	 if not stuff.hittatkatt then
+	if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), vector3(pos), true) <= 40.5 then
+	if not stuff.spawnkatt then
+	stuff.spawnkatt = true
+	kattped = createPed(1462895032, pos, 305.69)
+	NetworkRegisterEntityAsNetworked(kattped)
+	FreezeEntityPosition(kattped, true)
+	TriggerEvent('esx:showNotification', 'Katt har landat på månen.')
+	end
+	if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), GetEntityCoords(kattped), false) <= 2.0 then
+	
+	 BeginTextCommandDisplayHelp('STRING')
+            AddTextComponentSubstringPlayerName(('~INPUT_CONTEXT~ Plocka upp %s'):format('Babsan'))
+            EndTextCommandDisplayHelp(0, false, true, -1)
+            if IsControlJustReleased(0, 38) then
+                sleep = 500
+				TaskStartScenarioInPlace(GetPlayerPed(-1), "CODE_HUMAN_MEDIC_KNEEL", 0, false)
+				Wait(5000)
+				  TriggerEvent('fsc_questline:avslutaanim')
+				stuff.hittatkatt = true
+				DeleteEntity(kattped)
+				TriggerEvent("animation:carry","crate01")
+				RemoveBlip(pedBlip)
+				TriggerEvent('esx:showNotification', 'Du har hittat Babsan, lämna tillbaka henne till Vanja.')
+end
+end
+end
+else
+end
+Wait(5)
+end
+end)
+
+
+-- Quest 2: lägger in ringarna och allt.
+RegisterNetEvent('fsc_questline:ringpos')
+AddEventHandler('fsc_questline:ringpos', function(avloppos, avloppcords, skattjakt,avloppletare1, avloppletare2,avloppletare3, avloppletare4)
+stuff.inMission = true
+local skattjaktkoll = 0 -- Client räknar hur många gånger du letat.
+
+SetNewWaypoint(avloppcords)
+
+local pedBlip = AddBlipForCoord(avloppcords) -- till client
+	SetBlipColour(pedBlip, 1) -- till client
+	BeginTextCommandSetBlipName("STRING") -- till client
+	AddTextComponentString('Avloppsutgång') -- till client
+EndTextCommandSetBlipName(pedBlip) -- till client
+
+
+local slamsugen1 = false -- CLIENT
+local slamsugen2 = false -- CLIENT
+local slamsugen3 = false -- CLIENT
+local slamsugen4 = false -- CLIENT
+
+TriggerEvent('fsc_questline:avbrytkamera')
+
+while true do  -- till client
+Citizen.Wait(1) -- till client
+    local plyCoords = GetEntityCoords(PlayerPedId(), 0) -- till client
+
+    local distance1 = #(vector3(avloppletare1.x, avloppletare1.y, avloppletare1.z) - plyCoords) -- till client
+	local distance2 = #(vector3(avloppletare2.x, avloppletare2.y, avloppletare2.z) - plyCoords)-- till client
+	local distance3 = #(vector3(avloppletare3.x, avloppletare3.y, avloppletare3.z) - plyCoords)-- till client
+	local distance4 = #(vector3(avloppletare4.x, avloppletare4.y, avloppletare4.z) - plyCoords)-- till client
+
+    --POS1
+        if distance1 < 10 then
+		if slamsugen1 == false then
+		-- CLIENT
+            DrawMarker(0, avloppletare1.x, avloppletare1.y, avloppletare1.z, 0, 0, 0, 0, 0, 0, 0.5, 0.5, 1.0, 1, 157, 0, 155, false, false, 2, false, false, false, false)
+			-- CLIENT
+			DrawText3D(avloppletare1.x,avloppletare1.y,avloppletare1.z, '[E] för att leta')
+                        if distance1 < 2 then 
+						if IsControlJustReleased(0, 54) then
+						
+						fsc_questline_goranim() -- nya function för göra anim.
+						Wait(4000)
+						skattjaktkoll = skattjaktkoll + 1
+						if skattjaktkoll < skattjakt then
+						slamsugen1 = true
+						TriggerEvent('esx:showNotification', 'Du hittade inget i avföringen, fortsätt leta. ')
+						fsc_questline_avslutanim()
+						else
+						slamsugen1 = true
+						slamsugen2 = true
+						slamsugen3 = true
+						slamsugen4 = true
+						stuff.hittatring = true
+						TriggerEvent('esx:showNotification', 'Du hittade Vigselringen, lämna tillbaka den till Vanja eller Yngve.')
+						RemoveBlip(pedBlip)
+						fsc_questline_avslutanim()
+						end						
+						end
+						end
+			end
+			end
+			
+			if distance2 < 10 then
+		if slamsugen2 == false then
+            DrawMarker(0, avloppletare2.x, avloppletare2.y, avloppletare2.z, 0, 0, 0, 0, 0, 0, 0.5, 0.5, 1.0, 1, 157, 0, 155, false, false, 2, false, false, false, false)
+			DrawText3D(avloppletare2.x,avloppletare2.y,avloppletare2.z, '[E] för att leta')
+                        if distance2 < 2 then
+						if IsControlJustReleased(0, 54) then
+						fsc_questline_goranim()
+						Wait(4000)
+						skattjaktkoll = skattjaktkoll + 1
+						if skattjaktkoll < skattjakt then
+						slamsugen2 = true
+						TriggerEvent('esx:showNotification', 'Du hittade inget i avföringen, fortsätt leta.')
+						fsc_questline_avslutanim()
+						else
+						slamsugen1 = true
+						slamsugen2 = true
+						slamsugen3 = true
+						slamsugen4 = true
+						stuff.hittatring = true
+						TriggerEvent('esx:showNotification', 'Du hittade Vigselringen, lämna tillbaka den till Vanja eller Yngve.')
+						RemoveBlip(pedBlip)
+						fsc_questline_avslutanim()
+						end						
+						end
+						end
+			end
+			end
+			
+			        -- POS3
+if distance3 < 10 then
+		if slamsugen3 == false then
+            DrawMarker(0, avloppletare3.x, avloppletare3.y, avloppletare3.z, 0, 0, 0, 0, 0, 0, 0.5, 0.5, 1.0, 1, 157, 0, 155, false, false, 2, false, false, false, false)
+			DrawText3D(avloppletare3.x,avloppletare3.y,avloppletare3.z, '[E] för att leta')
+                        if distance3 < 2 then
+						if IsControlJustReleased(0, 54) then
+						fsc_questline_goranim()
+						Wait(4000)
+						skattjaktkoll = skattjaktkoll + 1
+						if skattjaktkoll < skattjakt then
+						slamsugen3 = true
+						TriggerEvent('esx:showNotification', 'Du hittade inget i avföringen, fortsätt leta.')
+						fsc_questline_avslutanim()
+						else
+						slamsugen1 = true
+						slamsugen2 = true
+						slamsugen3 = true
+						slamsugen4 = true
+						stuff.hittatring = true
+						TriggerEvent('esx:showNotification', 'Du hittade Vigselringen, lämna tillbaka den till Vanja eller Yngve.')
+						RemoveBlip(pedBlip)
+						fsc_questline_avslutanim()
+						end						
+						end
+						end
+			end
+			end
+			
+			if distance4 < 10 then
+		if slamsugen4 == false then
+            DrawMarker(0, avloppletare4.x, avloppletare4.y, avloppletare4.z, 0, 0, 0, 0, 0, 0, 0.5, 0.5, 1.0, 1, 157, 0, 155, false, false, 2, false, false, false, false)
+			DrawText3D(avloppletare4.x,avloppletare4.y,avloppletare4.z, '[E] för att leta')
+                        if distance4 < 2 then
+						if IsControlJustReleased(0, 54) then
+						fsc_questline_goranim()
+						Wait(4000)
+						skattjaktkoll = skattjaktkoll + 1
+						if skattjaktkoll < skattjakt then
+						slamsugen4 = true
+						TriggerEvent('esx:showNotification', 'Du hittade inget i avföringen, fortsätt leta.')
+						fsc_questline_avslutanim()
+						else
+						slamsugen1 = true
+						slamsugen2 = true
+						slamsugen3 = true
+						slamsugen4 = true
+						stuff.hittatring = true
+						TriggerEvent('esx:showNotification', 'Du hittade Vigselringen, lämna tillbaka den till Vanja eller Yngve.')
+						RemoveBlip(pedBlip)
+						fsc_questline_avslutanim()
+						end						
+						end
+						end
+			end
+			end
+
+end
+end)
+
+-- lägger in quest3 körning pos nya version!
+RegisterNetEvent('fsc_questline:yngvepos')
+AddEventHandler('fsc_questline:yngvepos', function(restpos)
+stuff.inMission = true
+stuff.hittayngve = true
+TriggerEvent('fsc_questline:avbrytkamera')
+
+pedBlip3 = AddBlipForCoord(restpos)
+	SetBlipColour(pedBlip3, 1)
+	BeginTextCommandSetBlipName("STRING")
+	AddTextComponentString('Yngves Jobb')
+EndTextCommandSetBlipName(pedBlip3)
+SetNewWaypoint(113.5275, -1037.933)
+end)
+
+-- Quest 3 hämta varor
 function hemta()
 hemta1cords = vector3(-658.55, -892.09, 24.91)
 hemta2cords = vector3(1233.24, -3230.07, 5.65)
@@ -840,221 +1062,8 @@ Wait(5)
 end
 end
 
--- Quest 2: lägger in ringarna och allt.
-RegisterNetEvent('fsc_questline:ringpos')
-AddEventHandler('fsc_questline:ringpos', function(avloppos, avloppcords, skattjakt,avloppletare1, avloppletare2,avloppletare3, avloppletare4)
-stuff.inMission = true
-local skattjaktkoll = 0 -- Client räknar hur många gånger du letat.
-
-SetNewWaypoint(avloppcords)
-
-local pedBlip = AddBlipForCoord(avloppcords) -- till client
-	SetBlipColour(pedBlip, 1) -- till client
-	BeginTextCommandSetBlipName("STRING") -- till client
-	AddTextComponentString('Avloppsutgång') -- till client
-EndTextCommandSetBlipName(pedBlip) -- till client
 
 
-local slamsugen1 = false -- CLIENT
-local slamsugen2 = false -- CLIENT
-local slamsugen3 = false -- CLIENT
-local slamsugen4 = false -- CLIENT
-
-TriggerEvent('fsc_questline:avbrytkamera')
-
-while true do  -- till client
-Citizen.Wait(1) -- till client
-    local plyCoords = GetEntityCoords(PlayerPedId(), 0) -- till client
-
-    local distance1 = #(vector3(avloppletare1.x, avloppletare1.y, avloppletare1.z) - plyCoords) -- till client
-	local distance2 = #(vector3(avloppletare2.x, avloppletare2.y, avloppletare2.z) - plyCoords)-- till client
-	local distance3 = #(vector3(avloppletare3.x, avloppletare3.y, avloppletare3.z) - plyCoords)-- till client
-	local distance4 = #(vector3(avloppletare4.x, avloppletare4.y, avloppletare4.z) - plyCoords)-- till client
-
-    --POS1
-        if distance1 < 10 then
-		if slamsugen1 == false then
-		-- CLIENT
-            DrawMarker(0, avloppletare1.x, avloppletare1.y, avloppletare1.z, 0, 0, 0, 0, 0, 0, 0.5, 0.5, 1.0, 1, 157, 0, 155, false, false, 2, false, false, false, false)
-			-- CLIENT
-			DrawText3D(avloppletare1.x,avloppletare1.y,avloppletare1.z, '[E] för att leta')
-                        if distance1 < 2 then 
-						if IsControlJustReleased(0, 54) then
-						
-						fsc_questline_goranim() -- nya function för göra anim.
-						Wait(4000)
-						skattjaktkoll = skattjaktkoll + 1
-						if skattjaktkoll < skattjakt then
-						slamsugen1 = true
-						TriggerEvent('esx:showNotification', 'Du hittade inget i avföringen, fortsätt leta. ')
-						fsc_questline_avslutanim()
-						else
-						slamsugen1 = true
-						slamsugen2 = true
-						slamsugen3 = true
-						slamsugen4 = true
-						stuff.hittatring = true
-						TriggerEvent('esx:showNotification', 'Du hittade Vigselringen, lämna tillbaka den till Vanja eller Yngve.')
-						RemoveBlip(pedBlip)
-						fsc_questline_avslutanim()
-						end						
-						end
-						end
-			end
-			end
-			
-			if distance2 < 10 then
-		if slamsugen2 == false then
-            DrawMarker(0, avloppletare2.x, avloppletare2.y, avloppletare2.z, 0, 0, 0, 0, 0, 0, 0.5, 0.5, 1.0, 1, 157, 0, 155, false, false, 2, false, false, false, false)
-			DrawText3D(avloppletare2.x,avloppletare2.y,avloppletare2.z, '[E] för att leta')
-                        if distance2 < 2 then
-						if IsControlJustReleased(0, 54) then
-						fsc_questline_goranim()
-						Wait(4000)
-						skattjaktkoll = skattjaktkoll + 1
-						if skattjaktkoll < skattjakt then
-						slamsugen2 = true
-						TriggerEvent('esx:showNotification', 'Du hittade inget i avföringen, fortsätt leta.')
-						fsc_questline_avslutanim()
-						else
-						slamsugen1 = true
-						slamsugen2 = true
-						slamsugen3 = true
-						slamsugen4 = true
-						stuff.hittatring = true
-						TriggerEvent('esx:showNotification', 'Du hittade Vigselringen, lämna tillbaka den till Vanja eller Yngve.')
-						RemoveBlip(pedBlip)
-						fsc_questline_avslutanim()
-						end						
-						end
-						end
-			end
-			end
-			
-			        -- POS3
-if distance3 < 10 then
-		if slamsugen3 == false then
-            DrawMarker(0, avloppletare3.x, avloppletare3.y, avloppletare3.z, 0, 0, 0, 0, 0, 0, 0.5, 0.5, 1.0, 1, 157, 0, 155, false, false, 2, false, false, false, false)
-			DrawText3D(avloppletare3.x,avloppletare3.y,avloppletare3.z, '[E] för att leta')
-                        if distance3 < 2 then
-						if IsControlJustReleased(0, 54) then
-						fsc_questline_goranim()
-						Wait(4000)
-						skattjaktkoll = skattjaktkoll + 1
-						if skattjaktkoll < skattjakt then
-						slamsugen3 = true
-						TriggerEvent('esx:showNotification', 'Du hittade inget i avföringen, fortsätt leta.')
-						fsc_questline_avslutanim()
-						else
-						slamsugen1 = true
-						slamsugen2 = true
-						slamsugen3 = true
-						slamsugen4 = true
-						stuff.hittatring = true
-						TriggerEvent('esx:showNotification', 'Du hittade Vigselringen, lämna tillbaka den till Vanja eller Yngve.')
-						RemoveBlip(pedBlip)
-						fsc_questline_avslutanim()
-						end						
-						end
-						end
-			end
-			end
-			
-			if distance4 < 10 then
-		if slamsugen4 == false then
-            DrawMarker(0, avloppletare4.x, avloppletare4.y, avloppletare4.z, 0, 0, 0, 0, 0, 0, 0.5, 0.5, 1.0, 1, 157, 0, 155, false, false, 2, false, false, false, false)
-			DrawText3D(avloppletare4.x,avloppletare4.y,avloppletare4.z, '[E] för att leta')
-                        if distance4 < 2 then
-						if IsControlJustReleased(0, 54) then
-						fsc_questline_goranim()
-						Wait(4000)
-						skattjaktkoll = skattjaktkoll + 1
-						if skattjaktkoll < skattjakt then
-						slamsugen4 = true
-						TriggerEvent('esx:showNotification', 'Du hittade inget i avföringen, fortsätt leta.')
-						fsc_questline_avslutanim()
-						else
-						slamsugen1 = true
-						slamsugen2 = true
-						slamsugen3 = true
-						slamsugen4 = true
-						stuff.hittatring = true
-						TriggerEvent('esx:showNotification', 'Du hittade Vigselringen, lämna tillbaka den till Vanja eller Yngve.')
-						RemoveBlip(pedBlip)
-						fsc_questline_avslutanim()
-						end						
-						end
-						end
-			end
-			end
-
-end
-end)
-
--- lägger in quest3 körning pos nya version!
-RegisterNetEvent('fsc_questline:yngvepos')
-AddEventHandler('fsc_questline:yngvepos', function(restpos)
-stuff.inMission = true
-stuff.hittayngve = true
-TriggerEvent('fsc_questline:avbrytkamera')
-
-pedBlip3 = AddBlipForCoord(restpos)
-	SetBlipColour(pedBlip3, 1)
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString('Yngves Jobb')
-EndTextCommandSetBlipName(pedBlip3)
-SetNewWaypoint(113.5275, -1037.933)
-end)
-
---lägger in katten och allt det. nya versionen!
-RegisterNetEvent('fsc_questline:kattpos')
-AddEventHandler('fsc_questline:kattpos', function(pos, cords)
-stuff.inMission = true
-    TriggerEvent('fsc_questline:avbrytkamera')
-	
-	--Sätter gps
-	--local pedBlip = AddBlipForEntity(ped)
-	SetNewWaypoint(cords)
-	local pedBlip = AddBlipForCoord(cords)
-	SetBlipColour(pedBlip, 1)
-	BeginTextCommandSetBlipName("STRING")
-	AddTextComponentString('Babsans GPS')
-EndTextCommandSetBlipName(pedBlip)
-
--- kollar om mission är igång, 
-	 while stuff.inMission do
-	 if not stuff.hittatkatt then
-	if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), vector3(pos), true) <= 40.5 then
-	if not stuff.spawnkatt then
-	stuff.spawnkatt = true
-	kattped = createPed(1462895032, pos, 305.69)
-	NetworkRegisterEntityAsNetworked(kattped)
-	FreezeEntityPosition(kattped, true)
-	TriggerEvent('esx:showNotification', 'Katt har landat på månen.')
-	end
-	if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), GetEntityCoords(kattped), false) <= 2.0 then
-	
-	 BeginTextCommandDisplayHelp('STRING')
-            AddTextComponentSubstringPlayerName(('~INPUT_CONTEXT~ Plocka upp %s'):format('Babsan'))
-            EndTextCommandDisplayHelp(0, false, true, -1)
-            if IsControlJustReleased(0, 38) then
-                sleep = 500
-				TaskStartScenarioInPlace(GetPlayerPed(-1), "CODE_HUMAN_MEDIC_KNEEL", 0, false)
-				Wait(5000)
-				  TriggerEvent('fsc_questline:avslutaanim')
-				stuff.hittatkatt = true
-				DeleteEntity(kattped)
-				TriggerEvent("animation:carry","crate01")
-				RemoveBlip(pedBlip)
-				TriggerEvent('esx:showNotification', 'Du har hittat Babsan, lämna tillbaka henne till Vanja.')
-end
-end
-end
-else
-end
-Wait(5)
-end
-end)
 -- här ska den ligga.
 
 RegisterNetEvent('fsc_questline:avbrytkamera')
