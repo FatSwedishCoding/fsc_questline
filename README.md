@@ -1,5 +1,5 @@
 # fsc_questline
-MADE BY Makki3 and Abbzon from FatSwedishCoding.
+MADE BY Marcusf1993 AKA Makki3 from FatSwedishCoding.
 
 A Quest giver with 5 quest atm.
 ur allow to use the script and modify it,
