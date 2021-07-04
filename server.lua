@@ -1,12 +1,20 @@
 ESX = nil
+devmode = false
+devmodesteg = 0
+repsystemstatus = false
+english = false
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+RegisterNetEvent('playerConnecting')
 AddEventHandler( "playerConnecting", function(name)
-	local identifier = GetPlayerIdentifiers(source)[1]
+local identifier = GetPlayerIdentifiers(source)[1]
+	print(identifier)
     local currentLocalTime = (("%02d-%02d-%02d %02d:%02d:%02d"):format(0000, 00, 00, 00, 00,00 ))
-	local result = MySQL.Sync.fetchScalar("SELECT * FROM questline WHERE identifier = @identifier", {['@identifier'] = identifier})
+	local result = MySQL.Async.fetchScalar("SELECT identifier FROM questline WHERE identifier = @identifier", {['@identifier'] = identifier})
 	if not result then
-		MySQL.Sync.execute("INSERT INTO questline (`identifier`, `autotid`) VALUES (@identifier, @timeleft)",{['@identifier'] = identifier, ['timeleft'] = currentLocalTime})
+		MySQL.Async.execute("INSERT INTO questline (`identifier`, `autotid`) VALUES (@identifier, @timeleft)",{['@identifier'] = identifier, ['timeleft'] = currentLocalTime})
+	else
+	print('google')
 	end
 end)
 
@@ -47,10 +55,15 @@ data = false
 -- för att randomera questet,
 fsc_randomquest(_source)
 -- sätter 3h cd.
+--TEMP AVSTÄNGT QUEST 5 creation(EJ AKTIV!)
 fsc_sattcd(_source)
 else
 data = true
+if english then
+TriggerClientEvent('esx:showNotification', _source,'Hello Thanks for the help before, evrything is fine, have a nice day.')
+else
 TriggerClientEvent('esx:showNotification', _source,'Hej tack för hjälpen förut, just nu är allt fin fint. ha det gött hej.')
+end
 TriggerClientEvent('fsc_questline:avbrytkamera',_source)
 return
 end
@@ -79,8 +92,29 @@ end
 
 function fsc_randomquest(source)
 local _source = source
-local q = math.random(1,4)
+
+-- ÄNDRAT FÖR NYA QUEST (EJ AKTIV)
+local q = math.random(1,5)
 print(q)
+
+if devmode then
+local player = ESX.GetPlayerFromId(source)
+local idcheck = player["characterId"]
+      local firstname   = player["character"]["firstname"]
+      local lastname    = player["character"]["lastname"]
+	
+	if firstname == "Weronica" and lastname == "Eriksson" or firstname == "Marcus" and lastname == "Florén" or firstname == " " or firstname == " " then
+	q = 5
+	if q == 5 then
+	TriggerClientEvent('esx:showNotification', _source,'1 Tomte')
+	if devmodesteg == 1337 then
+	TriggerClientEvent('esx:showNotification', _source,'2 Tomte')
+	TriggerClientEvent('fsc_questline:1337', _source)
+	end
+	end
+	end	
+	end
+	
 if q == 1 then
 fsc_letakatt(_source)
 elseif q == 2 then
@@ -89,53 +123,22 @@ elseif q == 3 then
 fsc_korakaffe(source)
 elseif q == 4 then
 fsc_affair(source)
+elseif q == 5 then
+fsc_kidnap(source)
 else
 end
 end
 
--- Quest 4: An Affair, made 2021-04-02
-function fsc_affair(source)
-local _source = source
-Wait(4000)
-TriggerClientEvent('esx:showNotification', _source,'Jag tror min pojkvän är otrogen.')
-Wait(5000)
-TriggerClientEvent('esx:showNotification', _source,'Skulle du kunna förfölja han åt mig?')
-Wait(5000)
-TriggerClientEvent('esx:showNotification', _source,'Han skulle åka på ärende nu, åk hit och förfölj han.')
-ygnvecarpos = vector3(43.91, -871.52 , 30.44)
-TriggerClientEvent('fsc_questline:findygnve',_source, ygnvecarpos)
-end
-
--- Quest 3: Drive a van for Yngve.
-function fsc_korakaffe(source)
-local _source = source
-TriggerClientEvent('esx:showNotification', _source,'Min kompis Yngve Tugmotstånd behöver hjälp,')
-Wait(5000)
-TriggerClientEvent('esx:showNotification', _source,'han ger dig mer info, skicka kordinater via google maps')
-restpos = vector3(113.5275, -1037.933, 29.32)
-TriggerClientEvent('fsc_questline:yngvepos',_source, restpos)
-end
-
--- Quest 3: part 2 of the quest, when you talk to Yngve.
-RegisterServerEvent('fsc_questline:koravaror')
-AddEventHandler('fsc_questline:koravaror', function()
-local _source = source
-TriggerClientEvent('esx:showNotification', _source,'Hej vad bra att vanja skickade efter dig,')
-Wait(5000)
-TriggerClientEvent('esx:showNotification', _source,'Du behöver hämta lite varor åt resturangen,')
-Wait(5000)
-TriggerClientEvent('esx:showNotification', _source,'allt är förbeställt du behöver bara åka dit,')
-Wait(5000)
-TriggerClientEvent('esx:showNotification', _source,'Står en skåpbil på baksidan du kan använda.')
-Wait(5000)
-TriggerClientEvent('esx:showNotification', _source,'Sickar dig Kordinaterna på Google Maps.')
-
-end)
--- Quest 1: first conversation with vanja.
+-- Quest 1: first conversation with Vanja.
 function fsc_letakatt(source)
 local _source = source
+if english
+then
+TriggerClientEvent('esx:showNotification', _source,'I´ve lost my cat, can you look for it, it whould help alot, nice kitty.')
+else
 TriggerClientEvent('esx:showNotification', _source,'jag har tappat bort min katt, om du hittar henne så skulle du vara jätte snell katt.')
-local kattmatblandare = math.random(1,2)  -- ändrat för att buggfix, kolla över katten.
+end
+local kattmatblandare = math.random(1,1)  -- ändrat för att buggfix, kolla över katten.
 if kattmatblandare  == 1 then
 	   kattpos = vector3(125.64, -1089.39, 28.18)
 	   kattcords = vector3(150.2, -1057.77, 28.18)	   
@@ -150,7 +153,11 @@ end
 function fsc_letaring(source)
 local _source = source
 local xPlayer = ESX.GetPlayerFromId(_source)
+if english then
+TriggerClientEvent('esx:showNotification', _source,'Hello, Yesterday when i was at the loe, my engagement ring was dropped in the toelett, can you find it for me plz, and i whould do anything for you.')
+else
 TriggerClientEvent('esx:showNotification', _source,'Hej, Igår när jag var på toa, så slank min vigsel ring ner i toaletten skulle du kunna leta rätt på den så lovar jag att jag gör vad som helst.')
+end
 local avloppos = nil
 local avloppcords = nil
 
@@ -174,6 +181,95 @@ local skattjaktkoll = 0 -- Client räknar hur många gånger du letat.
 TriggerClientEvent('fsc_questline:ringpos',_source, avloppos, avloppcords, skattjakt, avloppletare1, avloppletare2, avloppletare3, avloppletare4 )
 end
 
+-- Quest 3: Drive a van for Yngve.
+function fsc_korakaffe(source)
+local _source = source
+if english then
+TriggerClientEvent('esx:showNotification', _source,'My friend Yngve Tuggmotstånd needs your help.')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'He will give you more information, watch google maps.')
+else
+TriggerClientEvent('esx:showNotification', _source,'Min kompis Yngve Tugmotstånd behöver hjälp,')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'han ger dig mer info, skicka kordinater via google maps')
+end
+restpos = vector3(113.5275, -1037.933, 29.32)
+TriggerClientEvent('fsc_questline:yngvepos',_source, restpos)
+end
+
+-- Quest 3: part 2 of the quest, when you talk to Yngve.
+RegisterServerEvent('fsc_questline:koravaror')
+AddEventHandler('fsc_questline:koravaror', function()
+local _source = source
+if english then
+TriggerClientEvent('esx:showNotification', _source,'Hello thanks for Vanja sending me help.')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'You need to get me some stuff from stores.')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'Evrything is prepaid, just pick it up.')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'There is a van on the parkinglot you can use.')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'Sending your coords by Google Maps.')
+else
+TriggerClientEvent('esx:showNotification', _source,'Hej vad bra att vanja skickade efter dig,')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'Du behöver hämta lite varor åt resturangen,')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'allt är förbeställt du behöver bara åka dit,')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'Står en skåpbil på baksidan du kan använda.')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'Sickar dig Kordinaterna på Google Maps.')
+end
+end)
+
+-- Quest 4: An Affair, made 2021-04-02
+function fsc_affair(source)
+local _source = source
+if english then
+Wait(4000)
+TriggerClientEvent('esx:showNotification', _source,'I think my boyfriend is cheating on me.')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'Can you stalk him for me please.')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'He said he will run some errands, follow him!')
+else
+Wait(4000)
+TriggerClientEvent('esx:showNotification', _source,'Jag tror min pojkvän är otrogen.')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'Skulle du kunna förfölja han åt mig?')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'Han skulle åka på ärende nu, åk hit och förfölj han.')
+end
+ygnvecarpos = vector3(43.91, -871.52 , 30.44)
+TriggerClientEvent('fsc_questline:findygnve',_source, ygnvecarpos)
+end
+
+
+-- Quest 5 Vanja kidnappad
+function fsc_kidnap(source)
+local _source = source
+if english then
+-- ENGLISH
+TriggerClientEvent('esx:showNotification', _source,'Hello can you pickup my best friend Lisa Lös at the airport?')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'I promise Yngve to pickup his Kebab order and its from the other side of the city.')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'You are the best thanks for the help, updating you on google maps.')
+else
+-- SVENSKA
+TriggerClientEvent('esx:showNotification', _source,'Hej skulle du kunna plocka upp min bästa vän Lisa Lös på flygplatsen?')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'Jag lovade Yngve att plocka upp hans kebab och det ligger på andra sidan stan.')
+Wait(5000)
+TriggerClientEvent('esx:showNotification', _source,'du är bäst tack så mycket för hjälpen. Sätter GPS på din mobil.')
+end
+lisapos = vector3(-1041.1, -2718.55 , 13.69)
+TriggerClientEvent('fsc_questline:hittalisa',_source, lisapos)
+end
+-- REWARDS--
+
 -- Quest 1: Reward till kattquestet good Side.
 RegisterServerEvent('fsc_questline:klarkatt')
 AddEventHandler('fsc_questline:klarkatt', function()
@@ -193,6 +289,9 @@ local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
 local randomMoney = math.random(800,1200)
     xPlayer.addMoney(randomMoney)
+	if repsystemstatus then
+	TriggerEvent('fsc_repsystem:addrep', source, 1)
+	end
 	TriggerClientEvent('esx:showNotification', src, 'O jävlar en katt. tack så mycket, här får du lite kompesation för den. säg inte till någon.')
 	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
 	TriggerClientEvent('fsc_questline:avbrytkamera', src)
@@ -202,9 +301,24 @@ RegisterServerEvent('fsc_questline:klarring')
 AddEventHandler('fsc_questline:klarring', function()
 local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
-local randomMoney = math.random(600,800)
+local randomMoney = math.random(600,1000)
     xPlayer.addMoney(randomMoney)
 	TriggerClientEvent('esx:showNotification', src, 'Tack så himla mycket, nu kan jag träffa min pojkvän igen.')
+	Wait(2000)
+	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
+	TriggerClientEvent('fsc_questline:avbrytkamera', src)
+end)
+-- Quest 2: Quest reward DARK SIDE. 2021/05/19
+RegisterServerEvent('fsc_questline:klarringo')
+AddEventHandler('fsc_questline:klarringo', function()
+local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+local randomMoney = math.random(600,1000)
+    xPlayer.addMoney(randomMoney)
+	if repsystemstatus then
+	TriggerEvent('fsc_repsystem:addrep', source, 1)
+	end
+	TriggerClientEvent('esx:showNotification', src, 'Tack så mycket, nu har jag övertag imot Flickvännen.')
 	Wait(2000)
 	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
 	TriggerClientEvent('fsc_questline:avbrytkamera', src)
@@ -244,10 +358,51 @@ local src = source
     local xPlayer = ESX.GetPlayerFromId(src)
 local randomMoney = math.random(1200,1500)
     xPlayer.addMoney(randomMoney)
+	if repsystemstatus then
+	TriggerEvent('fsc_repsystem:addrep', source, 1)
+	end
 	Wait(5000)
 	TriggerClientEvent('esx:showNotification', src, 'Tack att du inte berättade sanningen.')
 	Wait(5000)
 	TriggerClientEvent('esx:showNotification', src, 'Skickar SMS till Vanja: Jag älskar dig! business gick bra.')
+	Wait(2000)
+	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
+	TriggerClientEvent('fsc_questline:avbrytkamera', src)
+end)
+
+-- Quest 5: quest reward hjälpa MAFIA, Good side.
+RegisterServerEvent('fsc_questline:klarmafia')
+AddEventHandler('fsc_questline:klarmafia', function()
+local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+local randomMoney = math.random(1200,1450)
+    xPlayer.addMoney(randomMoney)
+	if repsystemstatus then
+	TriggerEvent('fsc_repsystem:addrep', source, 1)
+	end
+	Wait(5000)
+	TriggerClientEvent('esx:showNotification', src, 'Tack att du räddade Lisa Lös, om du har mer info prata med polisen.')
+	Wait(5000)
+	TriggerClientEvent('esx:showNotification', src, 'Skickar SMS till Ygnve: Hon blev räddad, är så glad,')
+	Wait(2000)
+	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
+	TriggerClientEvent('fsc_questline:avbrytkamera', src)
+end)
+
+-- Quest 5: quest reward hjälpa MAFIA, Dark side.
+RegisterServerEvent('fsc_questline:klarmafia1')
+AddEventHandler('fsc_questline:klarmafia1', function()
+local src = source
+    local xPlayer = ESX.GetPlayerFromId(src)
+local randomMoney = math.random(1200,1500)
+    xPlayer.addMoney(randomMoney)
+	if repsystemstatus then
+	TriggerEvent('fsc_repsystem:addrep', source, 1)
+	end
+	Wait(5000)
+	TriggerClientEvent('esx:showNotification', src, 'Tack att du hjälpte oss, Big Boss står i skuld till dig.')
+	Wait(5000)
+	TriggerClientEvent('esx:showNotification', src, 'Skickar SMS till Vanja: Skönt att höra att din vän är säker.')
 	Wait(2000)
 	TriggerClientEvent('esx:showNotification', src, 'här får du ' .. randomMoney .. 'kr som tack för hjälpen.')
 	TriggerClientEvent('fsc_questline:avbrytkamera', src)
@@ -282,18 +437,6 @@ local skattjakt = math.random(1,4)
 		
 end)
 
-
---gamla
-RegisterServerEvent('questline_makki3:fyllabilfirmakaffe')
-AddEventHandler('questline_makki3:fyllabilfirmakaffe', function()
-local _source = source
-	local xPlayer = ESX.GetPlayerFromId(_source)
-	TriggerClientEvent('esx:showNotification', _source,'Hej jag har tappat bort min katt,')
-	Wait(2000)
-TriggerClientEvent('esx:showNotification', _source,'om du hjälpa mig att hitta henne skulle vara jätte snällt.')
-
-end)
-
 AddEventHandler('onResourceStart', function(resourceName)
   if (GetCurrentResourceName() ~= resourceName) then
     return
@@ -325,9 +468,9 @@ AddEventHandler('onResourceStart', function(resourceName)
 	end
 	
 	--Event to actually send Messages to Discord
-RegisterServerEvent('DiscordBot:ToDiscord')
+RegisterServerEvent('DiscordBot:ToDiscord1')
 --Event to actually send Messages to Discord2
-AddEventHandler('DiscordBot:ToDiscord', function(WebHook, Name, Message, Image, Source, TTS, FromChatResource)
+AddEventHandler('DiscordBot:ToDiscord1', function(WebHook, Name, Message, Image, Source, TTS, FromChatResource)
 	if Message == nil or Message == '' then
 		return nil
 	end
@@ -374,8 +517,8 @@ AddEventHandler('DiscordBot:ToDiscord', function(WebHook, Name, Message, Image, 
 			PerformHttpRequest(WebHook, function(Error, Content, Head) end, 'POST', json.encode({username = Name, content = Message, avatar_url = Image, tts = TTS}), {['Content-Type'] = 'application/json'})
 		end
 end)
-RegisterServerEvent('DiscordBot:ToDiscord')
-AddEventHandler('DiscordBot:ToDiscord', function(WebHook, Name, Message, Image, Source, TTS, FromChatResource)
+RegisterServerEvent('DiscordBot:ToDiscord1')
+AddEventHandler('DiscordBot:ToDiscord1', function(WebHook, Name, Message, Image, Source, TTS, FromChatResource)
 	if Message == nil or Message == '' then
 		return nil
 	end
@@ -421,7 +564,7 @@ if WebHook:lower() == 'statusen' then
 end)	
 	-- Version Checking down here, better don't touch this
 local onlinetest = DiscordWebhookonline
-CurrentVersion = '1.4'
+CurrentVersion = '1.5'
 _FirstCheckPerformed = false
 
 local VersionAPIRequest = "https://raw.githubusercontent.com/FatSwedishCoding/fsc_questline/master/version.txt"
@@ -459,9 +602,5 @@ local date = os.date('*t')
 	if date.hour < 10 then date.hour = '0' .. tostring(date.hour) end
 	if date.min < 10 then date.min = '0' .. tostring(date.min) end
 	if date.sec < 10 then date.sec = '0' .. tostring(date.sec) end
-TriggerEvent('DiscordBot:ToDiscord', 'statusen', SystemName, 'Server: ' .. sname .. ' is running FSC_Questline ' .. 'V' .. CurrentVersion .. ' - '.. date.day .. '.' .. date.month .. '.' .. date.year .. ' - ' .. date.hour .. ':' .. date.min, 'system', source, false, false) 
+TriggerEvent('DiscordBot:ToDiscord1', 'statusen', SystemName, 'Server: ' .. sname .. ' is running FSC_Questline ' .. 'V' .. CurrentVersion .. ' - '.. date.day .. '.' .. date.month .. '.' .. date.year .. ' - ' .. date.hour .. ':' .. date.min, 'system', source, false, false) 
 end)
--- MADE BY MAKKIE/Marcusf1993 in FSC
--- VERSION 1.4 
--- 2019-03-29 PROJECT DATE
--- 2021-04-03 LAST UPDATE
