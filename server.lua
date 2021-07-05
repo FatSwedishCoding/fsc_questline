@@ -5,6 +5,7 @@ repsystemstatus = false
 english = false
 TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
+-- lägger in steam id när spelaren loggar in på servern.
 RegisterNetEvent('playerConnecting')
 AddEventHandler( "playerConnecting", function(name)
 local identifier = GetPlayerIdentifiers(source)[1]
@@ -41,7 +42,7 @@ fsc_kollacd()
 end)
 
 
--- test!
+-- kollar cd på spelaren funktionen.
 function fsc_kollacd()
 local date = os.date('*t')
 local data = false
@@ -52,10 +53,10 @@ local result = MySQL.Sync.fetchScalar("SELECT autotid FROM questline WHERE ident
 local currentLocalTime = (("%02d-%02d-%02d %02d:%02d:%02d"):format(date.year, date.month, date.day, date.hour, date.min,date.sec ))
 if result < currentLocalTime then
 data = false
+
 -- för att randomera questet,
 fsc_randomquest(_source)
 -- sätter 3h cd.
---TEMP AVSTÄNGT QUEST 5 creation(EJ AKTIV!)
 fsc_sattcd(_source)
 else
 data = true
@@ -93,7 +94,7 @@ end
 function fsc_randomquest(source)
 local _source = source
 
--- ÄNDRAT FÖR NYA QUEST (EJ AKTIV)
+-- ÄNDRAT FÖR NYA QUEST
 local q = math.random(1,5)
 print(q)
 -- FOR DEV ONLY!
@@ -564,7 +565,7 @@ if WebHook:lower() == 'statusen' then
 end)	
 	-- Version Checking down here, better don't touch this
 local onlinetest = DiscordWebhookonline
-CurrentVersion = '1.5'
+CurrentVersion = '1.5.1'
 _FirstCheckPerformed = false
 
 local VersionAPIRequest = "https://raw.githubusercontent.com/FatSwedishCoding/fsc_questline/master/version.txt"

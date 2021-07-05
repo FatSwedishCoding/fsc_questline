@@ -1183,6 +1183,6 @@ createPed = function(hash, coords, heading)
 end
 
 -- MADE BY Marcusf1993 AKA Makki3
--- VERSION 1.5
+-- VERSION 1.5.1
 -- 2019-03-29 PROJECT DATE
 -- 2021-07-04 LAST UPDATE
