@@ -35,17 +35,16 @@ end)
 -- Quest Giver NYA UPDATEN VANJA
 Citizen.CreateThread(function()
 while not NetworkIsSessionStarted() do Wait(0) end
+
 	-- Skapar Quest peden.
-	
-	
     ped2 = createPed(1146800212, vector3(242.61, -890.07, 30.49 -1), 32.17)
 	Wait(1000)
 	
 	while true do
 	local me = PlayerPedId()
-        local sleep = 200
-        local distance = GetDistanceBetweenCoords(GetEntityCoords(me), GetEntityCoords(ped2))
-        if distance > 2.5 then
+    local sleep = 200
+    local distance = GetDistanceBetweenCoords(GetEntityCoords(me), GetEntityCoords(ped2))
+    if distance > 2.5 then
             sleep = 200
 			else
 			sleep = 5
@@ -950,18 +949,15 @@ EndTextCommandSetBlipName(pedBlip) -- till client
   
 	NetworkRegisterEntityAsNetworked(dealerGuard1)
 	SetEntityInvincible(dealerGuard1, true)
-	FreezeEntityPosition(dealerGuard1, false)
+	FreezeEntityPosition(dealerGuard1, true)
 	
 	NetworkRegisterEntityAsNetworked(dealerGuard2)
 	SetEntityInvincible(dealerGuard2, true)
-	FreezeEntityPosition(dealerGuard2, false)
-	
-	 SetEntityHeading(dealerGuard2, 120)
-  SetEntityHeading(dealerGuard1, 120)
+	FreezeEntityPosition(dealerGuard2, true)
 	
 	NetworkRegisterEntityAsNetworked(lisaped)
 	SetEntityInvincible(lisaped, true)
-	FreezeEntityPosition(lisaped, false)
+	FreezeEntityPosition(lisaped, true)
   
   while not stuff.lisaval do
 	 if GetDistanceBetweenCoords(GetEntityCoords(PlayerPedId()), vector3(lisakid), true) <= 3.5 then
@@ -973,6 +969,7 @@ EndTextCommandSetBlipName(pedBlip) -- till client
 	 RemoveBlip(pedBlip)
 	   stuff.lisaval = true
 	   local pos1 = vector3(1667.31, 63.51, 171.86)
+	   FreezeEntityPosition(lisaped, false)
 	   TriggerEvent('esx:showNotification', 'Du: Ta bakvägen och spring ner till öst östra motorvägen!')
 	   Wait(4000)
 	   stuff.raddalisa = true
@@ -981,8 +978,8 @@ EndTextCommandSetBlipName(pedBlip) -- till client
 	   TaskGoToCoordAnyMeans(lisaped,pos1, 1.0, 0, 0, 786603, 0xbf800000) 
 	   Wait(10000)
 	   DeleteEntity(lisaped)
-  DeleteEntity(dealerGuard1)
-  DeleteEntity(dealerGuard2)
+       DeleteEntity(dealerGuard1)
+       DeleteEntity(dealerGuard2)
   end
   end
   
@@ -1183,6 +1180,6 @@ createPed = function(hash, coords, heading)
 end
 
 -- MADE BY Marcusf1993 AKA Makki3
--- VERSION 1.5.1
+-- VERSION 1.5.2
 -- 2019-03-29 PROJECT DATE
--- 2021-07-04 LAST UPDATE
+-- 2021-07-16 LAST UPDATE

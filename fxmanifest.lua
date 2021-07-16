@@ -4,7 +4,7 @@ game 'gta5'
 
 description 'Makkie Questline'
 
-version '1.4'
+version '1.5.2'
 
 server_scripts {
   '@mysql-async/lib/MySQL.lua',

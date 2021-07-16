@@ -1,5 +1,5 @@
 ESX = nil
-devmode = false
+devmode = true
 devmodesteg = 0
 repsystemstatus = false
 english = false
@@ -565,7 +565,7 @@ if WebHook:lower() == 'statusen' then
 end)	
 	-- Version Checking down here, better don't touch this
 local onlinetest = DiscordWebhookonline
-CurrentVersion = '1.5.1'
+CurrentVersion = '1.5.2'
 _FirstCheckPerformed = false
 
 local VersionAPIRequest = "https://raw.githubusercontent.com/FatSwedishCoding/fsc_questline/master/version.txt"
